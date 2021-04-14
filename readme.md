@@ -1,8 +1,8 @@
 ## How to get started
 
-npm install
-npm run-script build
-index.html im Browser öffnen
+npm install,
+npm run-script build,
+index.html im Browser öffnen,
 zusätzlich: npm run-script watch
 
 
