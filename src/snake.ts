@@ -1,6 +1,6 @@
 // this is the snake
 
-import { Cell } from "./cell";
+import { Pixel } from "./pixel";
 import { CELLSIZE, Direction, SCALE } from "./constants";
 import { Game } from "./index";
 
@@ -10,9 +10,9 @@ export class Snake {
   readonly INITIAL_DIRECTION = 'Right';
   readonly INITIAL_POSITION = { x: 1, y: 1 };
 
-  private head: Cell;
-  private tail: Cell[];
-  private directions: Direction[];
+  private snakeHead: Pixel;
+  private snakeTail: Pixel[];
+  private snakeDirection: Direction[];
   private size: number;
   private game: Game;
 
@@ -20,17 +20,17 @@ export class Snake {
       this.game = game;
      
       this.size = this.INITIAL_SIZE;
-      this.directions = [this.INITIAL_DIRECTION];
+      this.snakeDirection = [this.INITIAL_DIRECTION];
       
       // initial head
-      this.head = new Cell(this.INITIAL_POSITION.x, this.INITIAL_POSITION.y);
+      this.snakeHead = new Pixel(this.INITIAL_POSITION.x, this.INITIAL_POSITION.y);
     
       // initial tail
-      this.tail = [];
+      this.snakeTail = [];
   }
 
   setDirection(direction:Direction) {
-      const lastDirection = this.directions[this.directions.length-1];
+      const lastDirection = this.snakeDirection[this.snakeDirection.length-1];
       if(lastDirection == 'Up' && (direction == 'Down' || direction == 'Up')) {
         return;
       }
@@ -43,48 +43,48 @@ export class Snake {
       if(lastDirection == 'Right' && (direction == 'Left' || direction == 'Right')) {
         return;
       }
-      this.directions.push(direction);
+      this.snakeDirection.push(direction);
   }
 
   move() {
     
       // add current head to tail
-      this.tail.push(this.head);
+      this.snakeTail.push(this.snakeHead);
 
       // get next position
-      this.head = this.getNext();
+      this.snakeHead = this.getNext();
 
       // fix the snake size
-      if (this.tail.length > this.size) {
-          this.tail.splice(0, 1);
+      if (this.snakeTail.length > this.size) {
+          this.snakeTail.splice(0, 1);
       }
   }
 
   getNext():any {
-      const direction = this.directions.length > 1 ? this.directions.splice(0,1)[0] : this.directions[0];
+      const direction = this.snakeDirection.length > 1 ? this.snakeDirection.splice(0,1)[0] : this.snakeDirection[0];
       switch (direction) {
           case 'Up':
-              return new Cell(this.head.x, this.head.y - 1);
+              return new Pixel(this.snakeHead.x, this.snakeHead.y - 1);
           case 'Right':
-              return new Cell(this.head.x+1, this.head.y);
+              return new Pixel(this.snakeHead.x+1, this.snakeHead.y);
           case 'Down':
-              return new Cell(this.head.x, this.head.y + 1);
+              return new Pixel(this.snakeHead.x, this.snakeHead.y + 1);
           case 'Left':
-              return new Cell(this.head.x-1, this.head.y);
+              return new Pixel(this.snakeHead.x-1, this.snakeHead.y);
       }
   }
 
   draw(time: number, context:CanvasRenderingContext2D) {
-      const { cellWidth, cellHeight } = this.game.getConfiguration();
+      const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
       // head
       const size = CELLSIZE*SCALE/10;
       const offset = CELLSIZE*SCALE/3;
-      const x = cellWidth * this.head.x;
-      const y = cellHeight * this.head.y;
+      const x = cellWidth * this.snakeHead.x;
+      const y = cellHeight * this.snakeHead.y;
       context.fillStyle="#111111";
       context.fillRect(x, y, cellWidth, cellHeight) 
       // eyes
-      switch(this.directions[0]) {
+      switch(this.snakeDirection[0]) {
         case 'Up':
            context.beginPath();
            context.arc(x + offset, y + offset, size, 0, 2 * Math.PI, false);
@@ -116,7 +116,7 @@ export class Snake {
       }
       // tail
       context.fillStyle="#333333";
-      this.tail.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));    
+      this.snakeTail.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));    
   }
 
   grow(qty:number = 3) {
@@ -128,11 +128,11 @@ export class Snake {
   }
 
   getHead() {
-      return this.head;
+      return this.snakeHead;
   }
 
-  isSnake(cell: Cell) {
-       return this.tail.find(el => cell.x == el.x && cell.y == el.y);
+  isSnake(pixel: Pixel) {
+       return this.snakeTail.find(el => pixel.x == el.x && pixel.y == el.y);
   }
 }
 

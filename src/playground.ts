@@ -1,33 +1,33 @@
 // this is the playing field
 
-import { Cell } from "./cell";
-import { APPLES, SCALE } from "./constants";
+import { Pixel } from "./pixel";
+import { STRAWBERRIES, SCALE } from "./constants";
 import { Game } from "./index";
 
-export class Grid {
+export class Playground {
 
   private game: Game;
-  private apples: Cell[];
+  private strawberries: Pixel[];
 
   constructor(game: Game) {
       this.game = game;
-      this.apples = [];     
-      this.seed(); 
+      this.strawberries = [];     
+      this.scatter(); 
   }
 
-  seed() {
-     const { nbCellsX , nbCellsY, level} = this.game.getConfiguration();
-     const nbApples = APPLES * (level + 1) ;
+  scatter() {
+     const { nbCellsX , nbCellsY, level} = this.game.getSettings();
+     const nbApples = STRAWBERRIES * (level + 1) ;
      for (let count = 0;  count < nbApples; count++) {
           let x = Math.floor(Math.random() * nbCellsX);
           let y = Math.floor(Math.random() * nbCellsY); 
-          this.apples.push(new Cell(x, y));
+          this.strawberries.push(new Pixel(x, y));
       }
   }
 
   draw(time:number, context:CanvasRenderingContext2D) {
 
-      const { width, height, cellWidth, cellHeight } = this.game.getConfiguration();
+      const { width, height, pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
 
       context.fillStyle = 'black';
       context.lineWidth = 1 * SCALE;
@@ -46,20 +46,20 @@ export class Grid {
           context.stroke();
       }
 
-      // apples
+      // strawberries
       context.fillStyle = 'red';
-      this.apples.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
+      this.strawberries.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
   }
 
-  isApple(cell: Cell) {
-      return this.apples.find(el => cell.x == el.x && cell.y == el.y);
+  isStrawberry(cell: Pixel) {
+      return this.strawberries.find(el => cell.x == el.x && cell.y == el.y);
   }
 
-  eat(cell: Cell) {
-      this.apples = this.apples.filter(el => cell.x != el.x || cell.y != el.y)
+  eat(cell: Pixel) {
+      this.strawberries = this.strawberries.filter(el => cell.x != el.x || cell.y != el.y)
   }
 
   isDone() {
-    return this.apples.length == 0;
+    return this.strawberries.length == 0;
   }
 }

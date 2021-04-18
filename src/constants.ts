@@ -6,7 +6,7 @@ export const CELLSIZE = 20; // size of one square
 export const SCALE = 2.0; // draw everything twice as big and make it smaller to get clean lines even on a retina screen
 export const SPEED = 100; // initial speed
 export const MAX_LEVEL = 10;
-export const APPLES = 5;
+export const STRAWBERRIES = 5;
 
 // level background colors
 export const COLORS = [
@@ -29,8 +29,8 @@ export interface Configuration {
     nbCellsY: number;
     width: number;
     height: number;
-    cellWidth: number;
-    cellHeight: number;
+    pixelWidth: number;
+    pixelHeight: number;
     color: string;
 }
 

@@ -1,8 +1,8 @@
 //THIS MODULE WILL BE TREESHAKED CAUSE ITS FUNCTIONS ARENT USED
 
-import { Cell } from "./cell";
-import { CELLSIZE, COLORS, Configuration, Direction, HEIGHT, MAX_LEVEL, SCALE, SPEED, WIDTH } from "./constants";
-import { Grid } from "./grid";
+import { Pixel as Pixel } from "./pixel";
+import { CELLSIZE, COLORS, Configuration as Setting, Direction, HEIGHT, MAX_LEVEL, SCALE, SPEED, WIDTH } from "./constants";
+import { Playground as Playground } from "./playground";
 import { Snake } from "./snake";
 
 export class Game {
@@ -10,12 +10,12 @@ export class Game {
   private canvas: HTMLCanvasElement;
 
   private score:number = 0;
-  private running: boolean = false;
-  private grid: Grid;
+  private controlFunction: boolean = false;
+  private playground: Playground;
   private snake: Snake;
-  private configuration: Configuration;  
+  private setting: Setting;  
   private nextMove:number = 0;
-  touch: any;
+  private touch: any;
 
   constructor() {
 
@@ -31,20 +31,20 @@ export class Game {
       this.canvas.height = HEIGHT * CELLSIZE * SCALE;
 
       // configuration
-      this.configuration = {
+      this.setting = {
           level: 0,
           speed: SPEED,
           width: this.canvas.width,
           height: this.canvas.height,
           nbCellsX: WIDTH,
           nbCellsY: HEIGHT,
-          cellWidth: this.canvas.width / WIDTH,
-          cellHeight: this.canvas.height / HEIGHT,
+          pixelWidth: this.canvas.width / WIDTH,
+          pixelHeight: this.canvas.height / HEIGHT,
           color: COLORS[0]
       };
 
       this.snake = new Snake(this);
-      this.grid = new Grid(this);
+      this.playground = new Playground(this);
     
       // event listeners
       window.addEventListener('keydown', this.onKeyDown.bind(this), false);
@@ -55,27 +55,27 @@ export class Game {
 
   start() {
       this.nextMove = 0;
-      this.running = true;
+      this.controlFunction = true;
       requestAnimationFrame(this.loop.bind(this));
   }
 
   stop() {
-      this.running = false;
+      this.controlFunction = false;
   }
 
-  getConfiguration() {
-      return this.configuration
+  getSettings() {
+      return this.setting
   }
 
   loop(time:number) {
 
-      if(this.running) {
+      if(this.controlFunction) {
         
         requestAnimationFrame(this.loop.bind(this));
         
         if (time >= this.nextMove) {
           
-            this.nextMove = time + this.configuration.speed;
+            this.nextMove = time + this.setting.speed;
           
             // move once
             this.snake.move();
@@ -88,8 +88,8 @@ export class Game {
                 case 1:
                     this.snake.grow();
                     this.score += 100;
-                    this.grid.eat(this.snake.getHead());
-                    if(this.grid.isDone()) {
+                    this.playground.eat(this.snake.getHead());
+                    if(this.playground.isDone()) {
                       this.levelUp();
                     }
                 default:
@@ -102,7 +102,7 @@ export class Game {
 
   paint(time:number) {
     
-      const {width, height, color, level} = this.configuration;
+      const {width, height, color, level} = this.setting;
       const context:any = this.canvas.getContext("2d");
     
       // background
@@ -124,7 +124,7 @@ export class Game {
       context.fillText(this.score, 10*SCALE, 10*SCALE);
 
       // grid
-      this.grid.draw(time, context);
+      this.playground.draw(time, context);
       // snake
       this.snake.draw(time, context);
   }
@@ -139,8 +139,8 @@ export class Game {
           return -1;
       }
 
-      // ate apple?
-      if (this.grid.isApple(cell)) {
+      // ate strawberry?
+      if (this.playground.isStrawberry(cell)) {
           return 1;
       }
 
@@ -150,11 +150,11 @@ export class Game {
 
   levelUp() {
     this.score += 1000;
-    this.configuration.level++;
-    if(this.configuration.level < MAX_LEVEL) {
-      this.configuration.speed -= 7;
-      this.configuration.color = COLORS[this.configuration.level];
-      this.grid.seed();
+    this.setting.level++;
+    if(this.setting.level < MAX_LEVEL) {
+      this.setting.speed -= 7;
+      this.setting.color = COLORS[this.setting.level];
+      this.playground.scatter();
     } else {
       this.win();
     }
@@ -170,9 +170,9 @@ export class Game {
     this.stop();
   }
 
-  isOutside(cell: Cell) {
-      const { nbCellsX, nbCellsY } = this.configuration;
-      return cell.x < 0 || cell.x >= nbCellsX || cell.y < 0 || cell.y >= nbCellsY;
+  isOutside(pixel: Pixel) {
+      const { nbCellsX, nbCellsY } = this.setting;
+      return pixel.x < 0 || pixel.x >= nbCellsX || pixel.y < 0 || pixel.y >= nbCellsY;
   }
 
  onKeyDown(event:KeyboardEvent) {

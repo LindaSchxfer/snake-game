@@ -8,7 +8,7 @@
   const SCALE = 2.0; // draw everything twice as big and make it smaller to get clean lines even on a retina screen
   const SPEED = 100; // initial speed
   const MAX_LEVEL = 10;
-  const APPLES = 5;
+  const STRAWBERRIES = 5;
   // level background colors
   const COLORS = [
       '#fafafa',
@@ -23,7 +23,7 @@
       '#ff4d4d',
   ];
 
-  class Cell {
+  class Pixel {
       constructor(x, y) {
           this.x = x;
           this.y = y;
@@ -31,23 +31,23 @@
   }
 
   // this is the playing field
-  class Grid {
+  class Playground {
       constructor(game) {
           this.game = game;
-          this.apples = [];
-          this.seed();
+          this.strawberries = [];
+          this.scatter();
       }
-      seed() {
-          const { nbCellsX, nbCellsY, level } = this.game.getConfiguration();
-          const nbApples = APPLES * (level + 1);
+      scatter() {
+          const { nbCellsX, nbCellsY, level } = this.game.getSettings();
+          const nbApples = STRAWBERRIES * (level + 1);
           for (let count = 0; count < nbApples; count++) {
               let x = Math.floor(Math.random() * nbCellsX);
               let y = Math.floor(Math.random() * nbCellsY);
-              this.apples.push(new Cell(x, y));
+              this.strawberries.push(new Pixel(x, y));
           }
       }
       draw(time, context) {
-          const { width, height, cellWidth, cellHeight } = this.game.getConfiguration();
+          const { width, height, pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
           context.fillStyle = 'black';
           context.lineWidth = 1 * SCALE;
           for (let x = 0; x <= width; x += cellWidth) {
@@ -62,18 +62,18 @@
               context.lineTo(width, y);
               context.stroke();
           }
-          // apples
+          // strawberries
           context.fillStyle = 'red';
-          this.apples.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
+          this.strawberries.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
       }
-      isApple(cell) {
-          return this.apples.find(el => cell.x == el.x && cell.y == el.y);
+      isStrawberry(cell) {
+          return this.strawberries.find(el => cell.x == el.x && cell.y == el.y);
       }
       eat(cell) {
-          this.apples = this.apples.filter(el => cell.x != el.x || cell.y != el.y);
+          this.strawberries = this.strawberries.filter(el => cell.x != el.x || cell.y != el.y);
       }
       isDone() {
-          return this.apples.length == 0;
+          return this.strawberries.length == 0;
       }
   }
 
@@ -85,14 +85,14 @@
           this.INITIAL_POSITION = { x: 1, y: 1 };
           this.game = game;
           this.size = this.INITIAL_SIZE;
-          this.directions = [this.INITIAL_DIRECTION];
+          this.snakeDirection = [this.INITIAL_DIRECTION];
           // initial head
-          this.head = new Cell(this.INITIAL_POSITION.x, this.INITIAL_POSITION.y);
+          this.snakeHead = new Pixel(this.INITIAL_POSITION.x, this.INITIAL_POSITION.y);
           // initial tail
-          this.tail = [];
+          this.snakeTail = [];
       }
       setDirection(direction) {
-          const lastDirection = this.directions[this.directions.length - 1];
+          const lastDirection = this.snakeDirection[this.snakeDirection.length - 1];
           if (lastDirection == 'Up' && (direction == 'Down' || direction == 'Up')) {
               return;
           }
@@ -105,42 +105,42 @@
           if (lastDirection == 'Right' && (direction == 'Left' || direction == 'Right')) {
               return;
           }
-          this.directions.push(direction);
+          this.snakeDirection.push(direction);
       }
       move() {
           // add current head to tail
-          this.tail.push(this.head);
+          this.snakeTail.push(this.snakeHead);
           // get next position
-          this.head = this.getNext();
+          this.snakeHead = this.getNext();
           // fix the snake size
-          if (this.tail.length > this.size) {
-              this.tail.splice(0, 1);
+          if (this.snakeTail.length > this.size) {
+              this.snakeTail.splice(0, 1);
           }
       }
       getNext() {
-          const direction = this.directions.length > 1 ? this.directions.splice(0, 1)[0] : this.directions[0];
+          const direction = this.snakeDirection.length > 1 ? this.snakeDirection.splice(0, 1)[0] : this.snakeDirection[0];
           switch (direction) {
               case 'Up':
-                  return new Cell(this.head.x, this.head.y - 1);
+                  return new Pixel(this.snakeHead.x, this.snakeHead.y - 1);
               case 'Right':
-                  return new Cell(this.head.x + 1, this.head.y);
+                  return new Pixel(this.snakeHead.x + 1, this.snakeHead.y);
               case 'Down':
-                  return new Cell(this.head.x, this.head.y + 1);
+                  return new Pixel(this.snakeHead.x, this.snakeHead.y + 1);
               case 'Left':
-                  return new Cell(this.head.x - 1, this.head.y);
+                  return new Pixel(this.snakeHead.x - 1, this.snakeHead.y);
           }
       }
       draw(time, context) {
-          const { cellWidth, cellHeight } = this.game.getConfiguration();
+          const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
           // head
           const size = CELLSIZE * SCALE / 10;
           const offset = CELLSIZE * SCALE / 3;
-          const x = cellWidth * this.head.x;
-          const y = cellHeight * this.head.y;
+          const x = cellWidth * this.snakeHead.x;
+          const y = cellHeight * this.snakeHead.y;
           context.fillStyle = "#111111";
           context.fillRect(x, y, cellWidth, cellHeight);
           // eyes
-          switch (this.directions[0]) {
+          switch (this.snakeDirection[0]) {
               case 'Up':
                   context.beginPath();
                   context.arc(x + offset, y + offset, size, 0, 2 * Math.PI, false);
@@ -172,7 +172,7 @@
           }
           // tail
           context.fillStyle = "#333333";
-          this.tail.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
+          this.snakeTail.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
       }
       grow(qty = 3) {
           this.size += qty;
@@ -181,10 +181,10 @@
           this.size -= qty;
       }
       getHead() {
-          return this.head;
+          return this.snakeHead;
       }
-      isSnake(cell) {
-          return this.tail.find(el => cell.x == el.x && cell.y == el.y);
+      isSnake(pixel) {
+          return this.snakeTail.find(el => pixel.x == el.x && pixel.y == el.y);
       }
   }
 
@@ -192,7 +192,7 @@
   class Game {
       constructor() {
           this.score = 0;
-          this.running = false;
+          this.controlFunction = false;
           this.nextMove = 0;
           this.canvas = document.createElement('Canvas');
           document.body.appendChild(this.canvas);
@@ -203,19 +203,19 @@
           this.canvas.width = WIDTH * CELLSIZE * SCALE;
           this.canvas.height = HEIGHT * CELLSIZE * SCALE;
           // configuration
-          this.configuration = {
+          this.setting = {
               level: 0,
               speed: SPEED,
               width: this.canvas.width,
               height: this.canvas.height,
               nbCellsX: WIDTH,
               nbCellsY: HEIGHT,
-              cellWidth: this.canvas.width / WIDTH,
-              cellHeight: this.canvas.height / HEIGHT,
+              pixelWidth: this.canvas.width / WIDTH,
+              pixelHeight: this.canvas.height / HEIGHT,
               color: COLORS[0]
           };
           this.snake = new Snake(this);
-          this.grid = new Grid(this);
+          this.playground = new Playground(this);
           // event listeners
           window.addEventListener('keydown', this.onKeyDown.bind(this), false);
           this.canvas.addEventListener('touchstart', this.onTouchStart.bind(this), false);
@@ -224,20 +224,20 @@
       }
       start() {
           this.nextMove = 0;
-          this.running = true;
+          this.controlFunction = true;
           requestAnimationFrame(this.loop.bind(this));
       }
       stop() {
-          this.running = false;
+          this.controlFunction = false;
       }
-      getConfiguration() {
-          return this.configuration;
+      getSettings() {
+          return this.setting;
       }
       loop(time) {
-          if (this.running) {
+          if (this.controlFunction) {
               requestAnimationFrame(this.loop.bind(this));
               if (time >= this.nextMove) {
-                  this.nextMove = time + this.configuration.speed;
+                  this.nextMove = time + this.setting.speed;
                   // move once
                   this.snake.move();
                   // check what happened  
@@ -248,8 +248,8 @@
                       case 1:
                           this.snake.grow();
                           this.score += 100;
-                          this.grid.eat(this.snake.getHead());
-                          if (this.grid.isDone()) {
+                          this.playground.eat(this.snake.getHead());
+                          if (this.playground.isDone()) {
                               this.levelUp();
                           }
                       default:
@@ -260,7 +260,7 @@
           }
       }
       paint(time) {
-          const { width, height, color, level } = this.configuration;
+          const { width, height, color, level } = this.setting;
           const context = this.canvas.getContext("2d");
           // background
           context.fillStyle = color;
@@ -278,7 +278,7 @@
           context.fillStyle = 'rgba(0,0,0,0.25)';
           context.fillText(this.score, 10 * SCALE, 10 * SCALE);
           // grid
-          this.grid.draw(time, context);
+          this.playground.draw(time, context);
           // snake
           this.snake.draw(time, context);
       }
@@ -289,8 +289,8 @@
               // dead
               return -1;
           }
-          // ate apple?
-          if (this.grid.isApple(cell)) {
+          // ate strawberry?
+          if (this.playground.isStrawberry(cell)) {
               return 1;
           }
           // nothing special
@@ -298,11 +298,11 @@
       }
       levelUp() {
           this.score += 1000;
-          this.configuration.level++;
-          if (this.configuration.level < MAX_LEVEL) {
-              this.configuration.speed -= 7;
-              this.configuration.color = COLORS[this.configuration.level];
-              this.grid.seed();
+          this.setting.level++;
+          if (this.setting.level < MAX_LEVEL) {
+              this.setting.speed -= 7;
+              this.setting.color = COLORS[this.setting.level];
+              this.playground.scatter();
           }
           else {
               this.win();
@@ -316,9 +316,9 @@
           alert("You died.\r\n\r\nFinal Score: " + this.score);
           this.stop();
       }
-      isOutside(cell) {
-          const { nbCellsX, nbCellsY } = this.configuration;
-          return cell.x < 0 || cell.x >= nbCellsX || cell.y < 0 || cell.y >= nbCellsY;
+      isOutside(pixel) {
+          const { nbCellsX, nbCellsY } = this.setting;
+          return pixel.x < 0 || pixel.x >= nbCellsX || pixel.y < 0 || pixel.y >= nbCellsY;
       }
       onKeyDown(event) {
           switch (event.key) {

@@ -1,4 +1,4 @@
-export class Cell {
+export class Pixel {
 
     x:number;
     y: number;
