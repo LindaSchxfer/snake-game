@@ -1,14 +1,14 @@
 // this is the snake
 
 import { Pixel } from "./pixel";
-import { CELLSIZE, Direction, SCALE } from "./constants";
+import { PIXELSIZE, Direction, SCALE } from "./constants";
 import { Game } from "./index";
 
 export class Snake {
 
-  readonly INITIAL_SIZE = 3;
-  readonly INITIAL_DIRECTION = 'Right';
-  readonly INITIAL_POSITION = { x: 1, y: 1 };
+  readonly ORIGINAL_SIZE = 3;
+  readonly ORININAL_DIRECTION = 'Right';
+  readonly ORIGINAL_POSITION = { x: 1, y: 1 };
 
   private snakeHead: Pixel;
   private snakeTail: Pixel[];
@@ -19,13 +19,13 @@ export class Snake {
   constructor(game:Game) {
       this.game = game;
      
-      this.size = this.INITIAL_SIZE;
-      this.snakeDirection = [this.INITIAL_DIRECTION];
+      this.size = this.ORIGINAL_SIZE;
+      this.snakeDirection = [this.ORININAL_DIRECTION];
       
-      // initial head
-      this.snakeHead = new Pixel(this.INITIAL_POSITION.x, this.INITIAL_POSITION.y);
+      // original head
+      this.snakeHead = new Pixel(this.ORIGINAL_POSITION.x, this.ORIGINAL_POSITION.y);
     
-      // initial tail
+      // origina tail
       this.snakeTail = [];
   }
 
@@ -76,13 +76,15 @@ export class Snake {
 
   draw(time: number, context:CanvasRenderingContext2D) {
       const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
+
       // head
-      const size = CELLSIZE*SCALE/10;
-      const offset = CELLSIZE*SCALE/3;
+      const size = PIXELSIZE*SCALE/10;
+      const offset = PIXELSIZE*SCALE/3;
       const x = cellWidth * this.snakeHead.x;
       const y = cellHeight * this.snakeHead.y;
       context.fillStyle="#111111";
       context.fillRect(x, y, cellWidth, cellHeight) 
+
       // eyes
       switch(this.snakeDirection[0]) {
         case 'Up':
@@ -114,20 +116,21 @@ export class Snake {
            context.fill();
           break;
       }
+
       // tail
       context.fillStyle="#333333";
       this.snakeTail.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));    
   }
 
-  grow(qty:number = 3) {
+  lengthen(qty:number = 3) {
       this.size += qty;
   }
 
-  shrink(qty:number = 3) {
+  shorten(qty:number = 3) {
       this.size -= qty;
   }
 
-  getHead() {
+  getSnakeHead() {
       return this.snakeHead;
   }
 

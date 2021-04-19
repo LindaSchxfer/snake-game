@@ -1,12 +1,12 @@
-//THIS IS THE ENTRY FILE - WRITE YOUR MAIN LOGIC HERE!
+//this are the constante
 
 export const WIDTH = 80; // number of squares vertical
 export const HEIGHT = 40; // number of squares horizontal
-export const CELLSIZE = 20; // size of one square
+export const PIXELSIZE = 20; // size of one square
 export const SCALE = 2.0; // draw everything twice as big and make it smaller to get clean lines even on a retina screen
 export const SPEED = 100; // initial speed
 export const MAX_LEVEL = 10;
-export const STRAWBERRIES = 5;
+export const KIWI = 5;
 
 // level background colors
 export const COLORS = [
@@ -22,11 +22,11 @@ export const COLORS = [
   '#ff4d4d',
 ];
 
-export interface Configuration {
+export interface Settings {
     level: number;
     speed: number;
-    nbCellsX: number;
-    nbCellsY: number;
+    nbPixelX: number;
+    nbPixelY: number;
     width: number;
     height: number;
     pixelWidth: number;

@@ -1,7 +1,7 @@
-//THIS MODULE WILL BE TREESHAKED CAUSE ITS FUNCTIONS ARENT USED
+//this is the main locic
 
 import { Pixel as Pixel } from "./pixel";
-import { CELLSIZE, COLORS, Configuration as Setting, Direction, HEIGHT, MAX_LEVEL, SCALE, SPEED, WIDTH } from "./constants";
+import { PIXELSIZE, COLORS, Settings as Setting, Direction, HEIGHT, MAX_LEVEL, SCALE, SPEED, WIDTH } from "./constants";
 import { Playground as Playground } from "./playground";
 import { Snake } from "./snake";
 
@@ -23,12 +23,12 @@ export class Game {
       document.body.appendChild(this.canvas);
 
       // canvas element size in the page
-      this.canvas.style.width = WIDTH * CELLSIZE + 'px';
-      this.canvas.style.height = HEIGHT * CELLSIZE + 'px';
+      this.canvas.style.width = WIDTH * PIXELSIZE + 'px';
+      this.canvas.style.height = HEIGHT * PIXELSIZE + 'px';
 
       // image buffer size 
-      this.canvas.width = WIDTH * CELLSIZE * SCALE;
-      this.canvas.height = HEIGHT * CELLSIZE * SCALE;
+      this.canvas.width = WIDTH * PIXELSIZE * SCALE;
+      this.canvas.height = HEIGHT * PIXELSIZE * SCALE;
 
       // configuration
       this.setting = {
@@ -36,8 +36,8 @@ export class Game {
           speed: SPEED,
           width: this.canvas.width,
           height: this.canvas.height,
-          nbCellsX: WIDTH,
-          nbCellsY: HEIGHT,
+          nbPixelX: WIDTH,
+          nbPixelY: HEIGHT,
           pixelWidth: this.canvas.width / WIDTH,
           pixelHeight: this.canvas.height / HEIGHT,
           color: COLORS[0]
@@ -81,26 +81,26 @@ export class Game {
             this.snake.move();
                         
             // check what happened  
-            switch (this.checkState()) {
+            switch (this.checkCondition()) {
                 case -1:
                     this.die();
                     break;
                 case 1:
-                    this.snake.grow();
+                    this.snake.lengthen();
                     this.score += 100;
-                    this.playground.eat(this.snake.getHead());
+                    this.playground.eatKiwi(this.snake.getSnakeHead());
                     if(this.playground.isDone()) {
                       this.levelUp();
                     }
                 default:
                     // update display
-                    this.paint(time);
+                    this.display(time);
             }
         }
       }
   }
 
-  paint(time:number) {
+  display(time:number) {
     
       const {width, height, color, level} = this.setting;
       const context:any = this.canvas.getContext("2d");
@@ -123,15 +123,16 @@ export class Game {
       context.fillStyle = 'rgba(0,0,0,0.25)';
       context.fillText(this.score, 10*SCALE, 10*SCALE);
 
-      // grid
+      // playground
       this.playground.draw(time, context);
+
       // snake
       this.snake.draw(time, context);
   }
 
-  checkState() {
+  checkCondition() {
 
-      const cell = this.snake.getHead();
+      const cell = this.snake.getSnakeHead();
 
       // left the play area or ate itself?? 
       if (this.isOutside(cell) || this.snake.isSnake(cell)) {
@@ -139,8 +140,8 @@ export class Game {
           return -1;
       }
 
-      // ate strawberry?
-      if (this.playground.isStrawberry(cell)) {
+      // ate kiwi?
+      if (this.playground.isKiwi(cell)) {
           return 1;
       }
 
@@ -171,7 +172,7 @@ export class Game {
   }
 
   isOutside(pixel: Pixel) {
-      const { nbCellsX, nbCellsY } = this.setting;
+      const { nbPixelX: nbCellsX, nbPixelY: nbCellsY } = this.setting;
       return pixel.x < 0 || pixel.x >= nbCellsX || pixel.y < 0 || pixel.y >= nbCellsY;
   }
 

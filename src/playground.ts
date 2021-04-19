@@ -1,27 +1,27 @@
-// this is the playing field
+// this is the playground
 
 import { Pixel } from "./pixel";
-import { STRAWBERRIES, SCALE } from "./constants";
+import { KIWI, SCALE } from "./constants";
 import { Game } from "./index";
 
 export class Playground {
 
   private game: Game;
-  private strawberries: Pixel[];
+  private kiwi: Pixel[];
 
   constructor(game: Game) {
       this.game = game;
-      this.strawberries = [];     
+      this.kiwi = [];     
       this.scatter(); 
   }
 
   scatter() {
-     const { nbCellsX , nbCellsY, level} = this.game.getSettings();
-     const nbApples = STRAWBERRIES * (level + 1) ;
-     for (let count = 0;  count < nbApples; count++) {
+     const { nbPixelX: nbCellsX , nbPixelY: nbCellsY, level} = this.game.getSettings();
+     const nbKiwi = KIWI * (level + 1) ;
+     for (let count = 0;  count < nbKiwi; count++) {
           let x = Math.floor(Math.random() * nbCellsX);
           let y = Math.floor(Math.random() * nbCellsY); 
-          this.strawberries.push(new Pixel(x, y));
+          this.kiwi.push(new Pixel(x, y));
       }
   }
 
@@ -46,20 +46,20 @@ export class Playground {
           context.stroke();
       }
 
-      // strawberries
+      // kiwi
       context.fillStyle = 'red';
-      this.strawberries.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
+      this.kiwi.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
   }
 
-  isStrawberry(cell: Pixel) {
-      return this.strawberries.find(el => cell.x == el.x && cell.y == el.y);
+  isKiwi(cell: Pixel) {
+      return this.kiwi.find(el => cell.x == el.x && cell.y == el.y);
   }
 
-  eat(cell: Pixel) {
-      this.strawberries = this.strawberries.filter(el => cell.x != el.x || cell.y != el.y)
+  eatKiwi(pixel: Pixel) {
+      this.kiwi = this.kiwi.filter(el => pixel.x != el.x || pixel.y != el.y)
   }
 
   isDone() {
-    return this.strawberries.length == 0;
+    return this.kiwi.length == 0;
   }
 }
