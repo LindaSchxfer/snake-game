@@ -2,7 +2,7 @@
 
 import { Pixel } from "./pixel";
 import { KIWI, SCALE } from "./constants";
-import { Game } from "./index";
+import { Game } from "./game";
 
 export class Playground {
 

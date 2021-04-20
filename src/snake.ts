@@ -2,7 +2,7 @@
 
 import { Pixel } from "./pixel";
 import { PIXELSIZE, Direction, SCALE } from "./constants";
-import { Game } from "./index";
+import { Game } from "./game";
 
 export class Snake {
 
@@ -25,7 +25,7 @@ export class Snake {
       // original head
       this.snakeHead = new Pixel(this.ORIGINAL_POSITION.x, this.ORIGINAL_POSITION.y);
     
-      // origina tail
+      // original tail
       this.snakeTail = [];
   }
 

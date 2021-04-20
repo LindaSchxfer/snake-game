@@ -1,4 +1,4 @@
-(function (exports) {
+(function () {
   'use strict';
 
   //this are the constante
@@ -21,6 +21,101 @@
       '#f9f2ec',
       '#e6ffe6',
       '#ff4d4d',
+  ];
+  //ls: ON20 Special build the ON20 Bricks Array
+  const bricksSpecial = [
+      //row 1
+      { "x": 10, "y": 13 },
+      { "x": 11, "y": 13 },
+      { "x": 14, "y": 13 },
+      { "x": 15, "y": 13 },
+      { "x": 19, "y": 13 },
+      { "x": 26, "y": 13 },
+      { "x": 35, "y": 13 },
+      { "x": 36, "y": 13 },
+      { "x": 37, "y": 13 },
+      { "x": 38, "y": 13 },
+      { "x": 39, "y": 13 },
+      { "x": 44, "y": 13 },
+      { "x": 45, "y": 13 },
+      { "x": 48, "y": 13 },
+      { "x": 49, "y": 13 },
+      //row 2
+      { "x": 9, "y": 14 },
+      { "x": 16, "y": 14 },
+      { "x": 19, "y": 14 },
+      { "x": 20, "y": 14 },
+      { "x": 26, "y": 14 },
+      { "x": 34, "y": 14 },
+      { "x": 40, "y": 14 },
+      { "x": 43, "y": 14 },
+      { "x": 50, "y": 14 },
+      //row 3
+      { "x": 9, "y": 15 },
+      { "x": 16, "y": 15 },
+      { "x": 19, "y": 15 },
+      { "x": 20, "y": 15 },
+      { "x": 21, "y": 15 },
+      { "x": 26, "y": 15 },
+      { "x": 40, "y": 15 },
+      { "x": 43, "y": 15 },
+      { "x": 50, "y": 15 },
+      //row 4
+      { "x": 9, "y": 16 },
+      { "x": 16, "y": 16 },
+      { "x": 19, "y": 16 },
+      { "x": 22, "y": 16 },
+      { "x": 26, "y": 16 },
+      { "x": 39, "y": 16 },
+      { "x": 43, "y": 16 },
+      { "x": 50, "y": 16 },
+      //row 5
+      { "x": 9, "y": 19 },
+      { "x": 16, "y": 19 },
+      { "x": 19, "y": 19 },
+      { "x": 23, "y": 19 },
+      { "x": 26, "y": 19 },
+      { "x": 36, "y": 19 },
+      { "x": 43, "y": 19 },
+      { "x": 50, "y": 19 },
+      //row 6
+      { "x": 9, "y": 20 },
+      { "x": 16, "y": 20 },
+      { "x": 19, "y": 20 },
+      { "x": 24, "y": 20 },
+      { "x": 25, "y": 20 },
+      { "x": 26, "y": 20 },
+      { "x": 35, "y": 20 },
+      { "x": 43, "y": 20 },
+      { "x": 50, "y": 20 },
+      //row 7
+      { "x": 9, "y": 21 },
+      { "x": 16, "y": 21 },
+      { "x": 19, "y": 21 },
+      { "x": 25, "y": 21 },
+      { "x": 26, "y": 21 },
+      { "x": 34, "y": 21 },
+      { "x": 35, "y": 21 },
+      { "x": 43, "y": 21 },
+      { "x": 50, "y": 21 },
+      //row 8
+      { "x": 10, "y": 22 },
+      { "x": 11, "y": 22 },
+      { "x": 14, "y": 22 },
+      { "x": 15, "y": 22 },
+      { "x": 19, "y": 22 },
+      { "x": 26, "y": 22 },
+      { "x": 34, "y": 22 },
+      { "x": 35, "y": 22 },
+      { "x": 36, "y": 22 },
+      { "x": 37, "y": 22 },
+      { "x": 38, "y": 22 },
+      { "x": 39, "y": 22 },
+      { "x": 40, "y": 22 },
+      { "x": 44, "y": 22 },
+      { "x": 45, "y": 22 },
+      { "x": 48, "y": 22 },
+      { "x": 49, "y": 22 }
   ];
 
   class Pixel {
@@ -88,7 +183,7 @@
           this.snakeDirection = [this.ORININAL_DIRECTION];
           // original head
           this.snakeHead = new Pixel(this.ORIGINAL_POSITION.x, this.ORIGINAL_POSITION.y);
-          // origina tail
+          // original tail
           this.snakeTail = [];
       }
       setDirection(direction) {
@@ -364,13 +459,109 @@
           e.preventDefault();
       }
   }
+
+  //this is the main locic
+  class Classic extends Game {
+      constructor() {
+          super();
+      }
+      display(time) {
+          const { width, height, color, level } = this.setting;
+          const context = this.canvas.getContext("2d");
+          // background
+          context.fillStyle = color;
+          context.fillRect(0, 0, width, height);
+          // level
+          context.font = height + 'px Roboto Condensed';
+          context.textBaseline = 'middle';
+          context.textAlign = 'center';
+          context.fillStyle = 'rgba(0,0,0,0.1)';
+          context.fillText(level + 1, width / 2, height / 2);
+          // score
+          context.font = 35 * SCALE + 'px Roboto Condensed';
+          context.textAlign = 'left';
+          context.textBaseline = 'top';
+          context.fillStyle = 'rgba(0,0,0,0.25)';
+          context.fillText(this.score, 10 * SCALE, 10 * SCALE);
+          // playground
+          this.playground.draw(time, context);
+          // snake
+          this.snake.draw(time, context);
+      }
+      checkCondition() {
+          const cell = this.snake.getSnakeHead();
+          // left the play area or ate itself?? 
+          if (this.isOutside(cell) || this.snake.isSnake(cell)) {
+              // dead
+              return -1;
+          }
+          // ate kiwi?
+          if (this.playground.isKiwi(cell)) {
+              return 1;
+          }
+          // nothing special
+          return 0;
+      }
+  }
+
+  //this is the main locic
+  class OnSpecial extends Game {
+      constructor() {
+          super();
+      }
+      display(time) {
+          const { width, height, color, level } = this.setting;
+          const context = this.canvas.getContext("2d");
+          // background
+          context.fillStyle = color;
+          context.fillRect(0, 0, width, height);
+          // level
+          context.font = height + 'px Roboto Condensed';
+          context.textBaseline = 'middle';
+          context.textAlign = 'center';
+          context.fillStyle = 'rgba(0,0,0,0.1)';
+          context.fillText(level + 1, width / 2, height / 2);
+          // score
+          context.font = 35 * SCALE + 'px Roboto Condensed';
+          context.textAlign = 'left';
+          context.textBaseline = 'top';
+          context.fillStyle = 'rgba(0,0,0,0.25)';
+          context.fillText(this.score, 10 * SCALE, 10 * SCALE);
+          // playground
+          this.playground.draw(time, context);
+          //ls: ON20 Special 
+          const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.setting;
+          context.fillStyle = 'rgb(52,52,52)';
+          bricksSpecial.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
+          // snake
+          this.snake.draw(time, context);
+      }
+      checkCondition() {
+          const cell = this.snake.getSnakeHead();
+          // left the play area or ate itself?? 
+          //ls: OO20 Special check condition added
+          if (this.isOutside(cell) || this.snake.isSnake(cell) || this.crashedInBricks(cell)) {
+              // dead
+              return -1;
+          }
+          // ate kiwi?
+          if (this.playground.isKiwi(cell)) {
+              return 1;
+          }
+          // nothing special
+          return 0;
+      }
+      //ls: On20 Special function: if Snake crashed in Bricks? --> true
+      crashedInBricks(pixel) {
+          return bricksSpecial.find(el => pixel.x == el.x && pixel.y == el.y);
+      }
+  }
+
+  //this is the main locic
   window.focus();
-  new Game().start();
+  //ls: Modus Classic
+  new Classic().start();
+  //ls: Modus ON20 Special
+  new OnSpecial().start();
 
-  exports.Game = Game;
-
-  Object.defineProperty(exports, '__esModule', { value: true });
-
-  return exports;
-
-}({}));
+}());
