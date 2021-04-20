@@ -14,6 +14,8 @@ zusätzlich: npm run-script watch
 •	best Score
 •	Snake becomes faster with numbers of apples
 
+font-family: 'Roboto Condensed', sans-serif;
+
 
 
 

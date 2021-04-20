@@ -1,7 +1,7 @@
 //this are the constante
 
-export const WIDTH = 80; // number of squares vertical
-export const HEIGHT = 40; // number of squares horizontal
+export const WIDTH = 60; // number of squares vertical
+export const HEIGHT = 35; // number of squares horizontal
 export const PIXELSIZE = 20; // size of one square
 export const SCALE = 2.0; // draw everything twice as big and make it smaller to get clean lines even on a retina screen
 export const SPEED = 100; // initial speed

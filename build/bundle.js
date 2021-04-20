@@ -2,8 +2,8 @@
   'use strict';
 
   //this are the constante
-  const WIDTH = 80; // number of squares vertical
-  const HEIGHT = 40; // number of squares horizontal
+  const WIDTH = 60; // number of squares vertical
+  const HEIGHT = 35; // number of squares horizontal
   const PIXELSIZE = 20; // size of one square
   const SCALE = 2.0; // draw everything twice as big and make it smaller to get clean lines even on a retina screen
   const SPEED = 100; // initial speed
@@ -266,13 +266,13 @@
           context.fillStyle = color;
           context.fillRect(0, 0, width, height);
           // level
-          context.font = height + 'px Arial';
+          context.font = height + 'px Roboto Condensed';
           context.textBaseline = 'middle';
           context.textAlign = 'center';
           context.fillStyle = 'rgba(0,0,0,0.1)';
           context.fillText(level + 1, width / 2, height / 2);
           // score
-          context.font = 35 * SCALE + 'px Arial';
+          context.font = 35 * SCALE + 'px Roboto Condensed';
           context.textAlign = 'left';
           context.textBaseline = 'top';
           context.fillStyle = 'rgba(0,0,0,0.25)';
