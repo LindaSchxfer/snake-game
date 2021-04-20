@@ -47,7 +47,7 @@ export class Playground {
       }
 
       // kiwi
-      context.fillStyle = 'red';
+      context.fillStyle = '#03DAC5';
       this.kiwi.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
   }
 

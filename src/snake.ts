@@ -82,7 +82,7 @@ export class Snake {
       const offset = PIXELSIZE*SCALE/3;
       const x = cellWidth * this.snakeHead.x;
       const y = cellHeight * this.snakeHead.y;
-      context.fillStyle="#111111";
+      context.fillStyle="#6200EE";
       context.fillRect(x, y, cellWidth, cellHeight) 
 
       // eyes
@@ -118,7 +118,7 @@ export class Snake {
       }
 
       // tail
-      context.fillStyle="#333333";
+      context.fillStyle="#BB86FC";
       this.snakeTail.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));    
   }
 

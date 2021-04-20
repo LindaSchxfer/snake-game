@@ -1,14 +1,14 @@
 (function (exports) {
   'use strict';
 
-  //THIS IS THE ENTRY FILE - WRITE YOUR MAIN LOGIC HERE!
+  //this are the constante
   const WIDTH = 80; // number of squares vertical
   const HEIGHT = 40; // number of squares horizontal
-  const CELLSIZE = 20; // size of one square
+  const PIXELSIZE = 20; // size of one square
   const SCALE = 2.0; // draw everything twice as big and make it smaller to get clean lines even on a retina screen
   const SPEED = 100; // initial speed
   const MAX_LEVEL = 10;
-  const STRAWBERRIES = 5;
+  const KIWI = 1;
   // level background colors
   const COLORS = [
       '#fafafa',
@@ -30,20 +30,20 @@
       }
   }
 
-  // this is the playing field
+  // this is the playground
   class Playground {
       constructor(game) {
           this.game = game;
-          this.strawberries = [];
+          this.kiwi = [];
           this.scatter();
       }
       scatter() {
-          const { nbCellsX, nbCellsY, level } = this.game.getSettings();
-          const nbApples = STRAWBERRIES * (level + 1);
-          for (let count = 0; count < nbApples; count++) {
+          const { nbPixelX: nbCellsX, nbPixelY: nbCellsY, level } = this.game.getSettings();
+          const nbKiwi = KIWI * (level + 1);
+          for (let count = 0; count < nbKiwi; count++) {
               let x = Math.floor(Math.random() * nbCellsX);
               let y = Math.floor(Math.random() * nbCellsY);
-              this.strawberries.push(new Pixel(x, y));
+              this.kiwi.push(new Pixel(x, y));
           }
       }
       draw(time, context) {
@@ -62,33 +62,33 @@
               context.lineTo(width, y);
               context.stroke();
           }
-          // strawberries
-          context.fillStyle = 'red';
-          this.strawberries.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
+          // kiwi
+          context.fillStyle = '#03DAC5';
+          this.kiwi.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
       }
-      isStrawberry(cell) {
-          return this.strawberries.find(el => cell.x == el.x && cell.y == el.y);
+      isKiwi(cell) {
+          return this.kiwi.find(el => cell.x == el.x && cell.y == el.y);
       }
-      eat(cell) {
-          this.strawberries = this.strawberries.filter(el => cell.x != el.x || cell.y != el.y);
+      eatKiwi(pixel) {
+          this.kiwi = this.kiwi.filter(el => pixel.x != el.x || pixel.y != el.y);
       }
       isDone() {
-          return this.strawberries.length == 0;
+          return this.kiwi.length == 0;
       }
   }
 
   // this is the snake
   class Snake {
       constructor(game) {
-          this.INITIAL_SIZE = 3;
-          this.INITIAL_DIRECTION = 'Right';
-          this.INITIAL_POSITION = { x: 1, y: 1 };
+          this.ORIGINAL_SIZE = 3;
+          this.ORININAL_DIRECTION = 'Right';
+          this.ORIGINAL_POSITION = { x: 1, y: 1 };
           this.game = game;
-          this.size = this.INITIAL_SIZE;
-          this.snakeDirection = [this.INITIAL_DIRECTION];
-          // initial head
-          this.snakeHead = new Pixel(this.INITIAL_POSITION.x, this.INITIAL_POSITION.y);
-          // initial tail
+          this.size = this.ORIGINAL_SIZE;
+          this.snakeDirection = [this.ORININAL_DIRECTION];
+          // original head
+          this.snakeHead = new Pixel(this.ORIGINAL_POSITION.x, this.ORIGINAL_POSITION.y);
+          // origina tail
           this.snakeTail = [];
       }
       setDirection(direction) {
@@ -133,11 +133,11 @@
       draw(time, context) {
           const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
           // head
-          const size = CELLSIZE * SCALE / 10;
-          const offset = CELLSIZE * SCALE / 3;
+          const size = PIXELSIZE * SCALE / 10;
+          const offset = PIXELSIZE * SCALE / 3;
           const x = cellWidth * this.snakeHead.x;
           const y = cellHeight * this.snakeHead.y;
-          context.fillStyle = "#111111";
+          context.fillStyle = "#6200EE";
           context.fillRect(x, y, cellWidth, cellHeight);
           // eyes
           switch (this.snakeDirection[0]) {
@@ -171,16 +171,16 @@
                   break;
           }
           // tail
-          context.fillStyle = "#333333";
+          context.fillStyle = "#BB86FC";
           this.snakeTail.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
       }
-      grow(qty = 3) {
+      lengthen(qty = 3) {
           this.size += qty;
       }
-      shrink(qty = 3) {
+      shorten(qty = 3) {
           this.size -= qty;
       }
-      getHead() {
+      getSnakeHead() {
           return this.snakeHead;
       }
       isSnake(pixel) {
@@ -188,7 +188,7 @@
       }
   }
 
-  //THIS MODULE WILL BE TREESHAKED CAUSE ITS FUNCTIONS ARENT USED
+  //this is the main locic
   class Game {
       constructor() {
           this.score = 0;
@@ -197,19 +197,19 @@
           this.canvas = document.createElement('Canvas');
           document.body.appendChild(this.canvas);
           // canvas element size in the page
-          this.canvas.style.width = WIDTH * CELLSIZE + 'px';
-          this.canvas.style.height = HEIGHT * CELLSIZE + 'px';
+          this.canvas.style.width = WIDTH * PIXELSIZE + 'px';
+          this.canvas.style.height = HEIGHT * PIXELSIZE + 'px';
           // image buffer size 
-          this.canvas.width = WIDTH * CELLSIZE * SCALE;
-          this.canvas.height = HEIGHT * CELLSIZE * SCALE;
+          this.canvas.width = WIDTH * PIXELSIZE * SCALE;
+          this.canvas.height = HEIGHT * PIXELSIZE * SCALE;
           // configuration
           this.setting = {
               level: 0,
               speed: SPEED,
               width: this.canvas.width,
               height: this.canvas.height,
-              nbCellsX: WIDTH,
-              nbCellsY: HEIGHT,
+              nbPixelX: WIDTH,
+              nbPixelY: HEIGHT,
               pixelWidth: this.canvas.width / WIDTH,
               pixelHeight: this.canvas.height / HEIGHT,
               color: COLORS[0]
@@ -241,25 +241,25 @@
                   // move once
                   this.snake.move();
                   // check what happened  
-                  switch (this.checkState()) {
+                  switch (this.checkCondition()) {
                       case -1:
                           this.die();
                           break;
                       case 1:
-                          this.snake.grow();
+                          this.snake.lengthen();
                           this.score += 100;
-                          this.playground.eat(this.snake.getHead());
+                          this.playground.eatKiwi(this.snake.getSnakeHead());
                           if (this.playground.isDone()) {
                               this.levelUp();
                           }
                       default:
                           // update display
-                          this.paint(time);
+                          this.display(time);
                   }
               }
           }
       }
-      paint(time) {
+      display(time) {
           const { width, height, color, level } = this.setting;
           const context = this.canvas.getContext("2d");
           // background
@@ -277,20 +277,20 @@
           context.textBaseline = 'top';
           context.fillStyle = 'rgba(0,0,0,0.25)';
           context.fillText(this.score, 10 * SCALE, 10 * SCALE);
-          // grid
+          // playground
           this.playground.draw(time, context);
           // snake
           this.snake.draw(time, context);
       }
-      checkState() {
-          const cell = this.snake.getHead();
+      checkCondition() {
+          const cell = this.snake.getSnakeHead();
           // left the play area or ate itself?? 
           if (this.isOutside(cell) || this.snake.isSnake(cell)) {
               // dead
               return -1;
           }
-          // ate strawberry?
-          if (this.playground.isStrawberry(cell)) {
+          // ate kiwi?
+          if (this.playground.isKiwi(cell)) {
               return 1;
           }
           // nothing special
@@ -317,7 +317,7 @@
           this.stop();
       }
       isOutside(pixel) {
-          const { nbCellsX, nbCellsY } = this.setting;
+          const { nbPixelX: nbCellsX, nbPixelY: nbCellsY } = this.setting;
           return pixel.x < 0 || pixel.x >= nbCellsX || pixel.y < 0 || pixel.y >= nbCellsY;
       }
       onKeyDown(event) {
