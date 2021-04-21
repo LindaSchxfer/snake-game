@@ -6,7 +6,7 @@
   const HEIGHT = 35; // number of squares horizontal
   const PIXELSIZE = 20; // size of one square
   const SCALE = 2.0; // draw everything twice as big and make it smaller to get clean lines even on a retina screen
-  const SPEED = 100; // initial speed
+  const SPEED = 150; // initial speed
   const MAX_LEVEL = 10;
   const KIWI = 1;
   // level background colors

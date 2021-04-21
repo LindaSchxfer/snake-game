@@ -1,9 +1,6 @@
 //this is the main locic
 
-import { Pixel as Pixel } from "./pixel";
-import { PIXELSIZE, COLORS, Settings as Setting, Direction, HEIGHT, MAX_LEVEL, SCALE, SPEED, WIDTH, bricksSpecial} from "./constants";
-import { Playground as Playground } from "./playground";
-import { Snake } from "./snake";
+import { SCALE } from "./constants";
 import { Game } from "./game";
 
 export class Classic extends Game{
@@ -22,7 +19,7 @@ export class Classic extends Game{
       context.fillRect(0,0,width,height);
     
       // level
-      context.font = height+'px Roboto Condensed';
+      context.font = height +'px Roboto Condensed';
       context.textBaseline = 'middle';
       context.textAlign = 'center';
       context.fillStyle = 'rgba(0,0,0,0.1)';
