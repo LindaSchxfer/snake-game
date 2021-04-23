@@ -12,7 +12,7 @@ export class Snake {
 
   private snakeHead: Pixel;
   private snakeTail: Pixel[];
-  private snakeDirection: Direction[];
+  private snakeDirection: String[];
   private size: number;
   private game: Game;
 
@@ -29,7 +29,7 @@ export class Snake {
       this.snakeTail = [];
   }
 
-  setDirection(direction:Direction) {
+  setDirection(direction:String) {
       const lastDirection = this.snakeDirection[this.snakeDirection.length-1];
       if(lastDirection == 'Up' && (direction == 'Down' || direction == 'Up')) {
         return;
@@ -60,7 +60,7 @@ export class Snake {
       }
   }
 
-  getNext():any {
+  getNext():Pixel {
       const direction = this.snakeDirection.length > 1 ? this.snakeDirection.splice(0,1)[0] : this.snakeDirection[0];
       switch (direction) {
           case 'Up':
@@ -72,6 +72,7 @@ export class Snake {
           case 'Left':
               return new Pixel(this.snakeHead.x-1, this.snakeHead.y);
       }
+      return new Pixel(0,0);
   }
 
   draw(time: number, context:CanvasRenderingContext2D) {

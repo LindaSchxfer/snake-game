@@ -1,3 +1,5 @@
+//this is the grid
+
 export class Pixel {
 
     x:number;

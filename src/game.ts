@@ -1,9 +1,15 @@
-//this is the main locic
+//this is the main game logic
 
 import { Pixel as Pixel } from "./pixel";
 import { PIXELSIZE, COLORS, Settings as Setting, Direction, HEIGHT, MAX_LEVEL, SCALE, SPEED, WIDTH} from "./constants";
 import { Playground as Playground } from "./playground";
 import { Snake } from "./snake";
+
+interface Touch{
+  pageX: number;
+  pageY: number;
+
+}
 
 export class Game {
 
@@ -15,7 +21,7 @@ export class Game {
   public snake: Snake;
   public setting: Setting;  
   public nextMove:number = 0;
-  public touch: any;
+  public touch: Touch = {pageX:0, pageY:0};
 
   constructor() {
 
@@ -103,7 +109,7 @@ export class Game {
   display(time:number) {
     
       const {width, height, color, level} = this.setting;
-      const context:any = this.canvas.getContext("2d");
+      const context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     
       // background
       context.fillStyle = color;
@@ -114,14 +120,14 @@ export class Game {
       context.textBaseline = 'middle';
       context.textAlign = 'center';
       context.fillStyle = 'rgba(0,0,0,0.1)';
-      context.fillText(level+1, width/2, height/2);
+      context.fillText(String(level+1), width/2, height/2);
     
       // score
       context.font = 35 * SCALE + 'px Roboto Condensed';
       context.textAlign = 'left';
       context.textBaseline = 'top';
       context.fillStyle = 'rgba(0,0,0,0.25)';
-      context.fillText(this.score, 10*SCALE, 10*SCALE);
+      context.fillText(String(this.score), 10*SCALE, 10*SCALE);
 
       // playground
       this.playground.draw(time, context);    
@@ -197,23 +203,23 @@ export class Game {
      }
   }
 
-  onTouchStart(e:any) {
+  onTouchStart(e:TouchEvent) {
       this.touch = e.changedTouches[0];
       e.preventDefault();
   }
 
-  onTouchMove(e:any){
+  onTouchMove(e:TouchEvent){
       e.preventDefault();
   }
 
-  onTouchEnd(e:any){
+  onTouchEnd(e:TouchEvent){
     
-      const touch:any = e.changedTouches[0]
+      const touch:Touch = e.changedTouches[0]
       
       const distX = touch.pageX - this.touch.pageX;
       const distY = touch.pageY - this.touch.pageY;
       
-      let direction:Direction = null;
+      let direction:String = "";
 
       if (Math.abs(distX) >= 100){ 
         direction = (distX < 0)? 'Left' : 'Right';

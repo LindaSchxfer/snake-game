@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  //this are the constante
+  //this are the constants
   const WIDTH = 60; // number of squares vertical
   const HEIGHT = 35; // number of squares horizontal
   const PIXELSIZE = 20; // size of one square
@@ -22,6 +22,15 @@
       '#e6ffe6',
       '#ff4d4d',
   ];
+  //ls: changed type to enum
+  var Direction;
+  (function (Direction) {
+      Direction[Direction["Up"] = 0] = "Up";
+      Direction[Direction["Right"] = 1] = "Right";
+      Direction[Direction["Left"] = 2] = "Left";
+      Direction[Direction["Down"] = 3] = "Down";
+      Direction[Direction["null"] = 4] = "null";
+  })(Direction || (Direction = {}));
   //ls: ON20 Special build the ON20 Bricks Array
   const bricksSpecial = [
       //row 1
@@ -118,6 +127,7 @@
       { "x": 49, "y": 22 }
   ];
 
+  //this is the grid
   class Pixel {
       constructor(x, y) {
           this.x = x;
@@ -224,6 +234,7 @@
               case 'Left':
                   return new Pixel(this.snakeHead.x - 1, this.snakeHead.y);
           }
+          return new Pixel(0, 0);
       }
       draw(time, context) {
           const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
@@ -283,12 +294,13 @@
       }
   }
 
-  //this is the main locic
+  //this is the main game logic
   class Game {
       constructor() {
           this.score = 0;
           this.controlFunction = false;
           this.nextMove = 0;
+          this.touch = { pageX: 0, pageY: 0 };
           this.canvas = document.createElement('Canvas');
           document.body.appendChild(this.canvas);
           // canvas element size in the page
@@ -365,13 +377,13 @@
           context.textBaseline = 'middle';
           context.textAlign = 'center';
           context.fillStyle = 'rgba(0,0,0,0.1)';
-          context.fillText(level + 1, width / 2, height / 2);
+          context.fillText(String(level + 1), width / 2, height / 2);
           // score
           context.font = 35 * SCALE + 'px Roboto Condensed';
           context.textAlign = 'left';
           context.textBaseline = 'top';
           context.fillStyle = 'rgba(0,0,0,0.25)';
-          context.fillText(this.score, 10 * SCALE, 10 * SCALE);
+          context.fillText(String(this.score), 10 * SCALE, 10 * SCALE);
           // playground
           this.playground.draw(time, context);
           // snake
@@ -446,7 +458,7 @@
           const touch = e.changedTouches[0];
           const distX = touch.pageX - this.touch.pageX;
           const distY = touch.pageY - this.touch.pageY;
-          let direction = null;
+          let direction = "";
           if (Math.abs(distX) >= 100) {
               direction = (distX < 0) ? 'Left' : 'Right';
           }
@@ -460,7 +472,7 @@
       }
   }
 
-  //this is the main locic
+  //this is the mode classic
   class Classic extends Game {
       constructor() {
           super();
@@ -476,13 +488,13 @@
           context.textBaseline = 'middle';
           context.textAlign = 'center';
           context.fillStyle = 'rgba(0,0,0,0.1)';
-          context.fillText(level + 1, width / 2, height / 2);
+          context.fillText(String(level + 1), width / 2, height / 2);
           // score
           context.font = 35 * SCALE + 'px Roboto Condensed';
           context.textAlign = 'left';
           context.textBaseline = 'top';
           context.fillStyle = 'rgba(0,0,0,0.25)';
-          context.fillText(this.score, 10 * SCALE, 10 * SCALE);
+          context.fillText(String(this.score), 10 * SCALE, 10 * SCALE);
           // playground
           this.playground.draw(time, context);
           // snake
@@ -504,7 +516,7 @@
       }
   }
 
-  //this is the main locic
+  //this is the mode ON20-Special
   class OnSpecial extends Game {
       constructor() {
           super();
@@ -520,13 +532,13 @@
           context.textBaseline = 'middle';
           context.textAlign = 'center';
           context.fillStyle = 'rgba(0,0,0,0.1)';
-          context.fillText(level + 1, width / 2, height / 2);
+          context.fillText(String(level + 1), width / 2, height / 2);
           // score
           context.font = 35 * SCALE + 'px Roboto Condensed';
           context.textAlign = 'left';
           context.textBaseline = 'top';
           context.fillStyle = 'rgba(0,0,0,0.25)';
-          context.fillText(this.score, 10 * SCALE, 10 * SCALE);
+          context.fillText(String(this.score), 10 * SCALE, 10 * SCALE);
           // playground
           this.playground.draw(time, context);
           //ls: ON20 Special 
@@ -559,9 +571,11 @@
 
   //this is the main locic
   window.focus();
-  //ls: Modus Classic
-  new Classic().start();
-  //ls: Modus ON20 Special
-  new OnSpecial().start();
+  new Classic().start(); //ls: Modus Classic
+  new OnSpecial().start(); //ls: Modus ON20-Special
+  /*window.focus = () => {
+      let div = document.createElement("div");
+      div.innerText = "hallo";
+  }*/
 
 }());

@@ -5,7 +5,11 @@ import { OnSpecial } from "./onSpecial";
 
 
 window.focus();
-//ls: Modus Classic
-new Classic().start();
-//ls: Modus ON20 Special
-new OnSpecial().start();
+new Classic().start();      //ls: Modus Classic
+new OnSpecial().start();    //ls: Modus ON20-Special
+
+
+/*window.focus = () => {
+    let div = document.createElement("div");
+    div.innerText = "hallo";
+}*/

@@ -1,4 +1,4 @@
-//this are the constante
+//this are the constants
 
 export const WIDTH = 60; // number of squares vertical
 export const HEIGHT = 35; // number of squares horizontal
@@ -34,7 +34,8 @@ export interface Settings {
     color: string;
 }
 
-export type Direction = 'Up' | 'Right' | 'Left' | 'Down' | null ;
+//ls: changed type to enum
+export enum Direction { 'Up' , 'Right' , 'Left' , 'Down' , null }
 
 //ls: ON20 Special build the ON20 Bricks Array
 export const bricksSpecial = [
