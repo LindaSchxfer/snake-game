@@ -24,7 +24,7 @@ body {
   }
 
   h2{
-    font-size: 38px;
+    font-size: 30px;
     font-weight: 400;
     display: inline;
   }
@@ -32,26 +32,27 @@ body {
   button{
     font-weight: 400;
     font-size: 20px;
-    width: 250px;
-    height: 50px;
+    width: 300px;
+    height: 60px;
     border-radius: 10px;
     background-color: #BB86FC;  
-    margin: 0 auto;  
   }
 
-  button.exit{
-    width: 50px;
-    float: right;
+  .exitdesign{
+    display: grid;
+    margin-left: 43%;
+    text-align: center;
+    padding-top: 15px;
   }
-
+  
   .modiauswahl{
     display: grid;
-    position: absolute;
-    margin: 8% 44%;   
+    position: relative;
+    margin: 6% 43%;   
   }
 
   .modiauswahl button{
-    margin-top: 15px;
+    margin-top: 20px;
   }
 
  

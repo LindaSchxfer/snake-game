@@ -11,18 +11,18 @@
   const KIWI = 1;
   // level background colors
   const COLORS = [
-      '#fafafa',
-      '#ffffcc',
-      '#ffe6ee',
-      '#e6f2ff',
-      '#e6ffe6',
-      '#fff0e6',
-      '#e6e6ff',
-      '#f9f2ec',
-      '#e6ffe6',
-      '#ff4d4d',
+      "#fafafa",
+      "#ffffcc",
+      "#ffe6ee",
+      "#e6f2ff",
+      "#e6ffe6",
+      "#fff0e6",
+      "#e6e6ff",
+      "#f9f2ec",
+      "#e6ffe6",
+      "#ff4d4d",
   ];
-  //ls: changed type to enum
+  // ls: Move directions (changed type to enum)
   var Direction;
   (function (Direction) {
       Direction[Direction["Up"] = 0] = "Up";
@@ -31,7 +31,7 @@
       Direction[Direction["Down"] = 3] = "Down";
       Direction[Direction["null"] = 4] = "null";
   })(Direction || (Direction = {}));
-  //ls: ON20 Special build the ON20 Bricks Array
+  // ls: ON20 Special build the ON20 Bricks Array
   const bricksSpecial = [
       //row 1
       { "x": 10, "y": 13 },
@@ -153,7 +153,7 @@
       }
       draw(time, context) {
           const { width, height, pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
-          context.fillStyle = 'black';
+          context.fillStyle = "black";
           context.lineWidth = 1 * SCALE;
           for (let x = 0; x <= width; x += cellWidth) {
               context.beginPath();
@@ -168,7 +168,7 @@
               context.stroke();
           }
           // kiwi
-          context.fillStyle = '#03DAC5';
+          context.fillStyle = "#03DAC5";
           this.kiwi.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
       }
       isKiwi(cell) {
@@ -198,16 +198,16 @@
       }
       setDirection(direction) {
           const lastDirection = this.snakeDirection[this.snakeDirection.length - 1];
-          if (lastDirection == 'Up' && (direction == 'Down' || direction == 'Up')) {
+          if (lastDirection == "Up" && (direction == "Down" || direction == "Up")) {
               return;
           }
-          if (lastDirection == 'Down' && (direction == 'Up' || direction == 'Down')) {
+          if (lastDirection == "Down" && (direction == "Up" || direction == "Down")) {
               return;
           }
-          if (lastDirection == 'Left' && (direction == 'Right' || direction == 'Left')) {
+          if (lastDirection == "Left" && (direction == "Right" || direction == "Left")) {
               return;
           }
-          if (lastDirection == 'Right' && (direction == 'Left' || direction == 'Right')) {
+          if (lastDirection == "Right" && (direction == "Left" || direction == "Right")) {
               return;
           }
           this.snakeDirection.push(direction);
@@ -225,13 +225,13 @@
       getNext() {
           const direction = this.snakeDirection.length > 1 ? this.snakeDirection.splice(0, 1)[0] : this.snakeDirection[0];
           switch (direction) {
-              case 'Up':
+              case "Up":
                   return new Pixel(this.snakeHead.x, this.snakeHead.y - 1);
-              case 'Right':
+              case "Right":
                   return new Pixel(this.snakeHead.x + 1, this.snakeHead.y);
-              case 'Down':
+              case "Down":
                   return new Pixel(this.snakeHead.x, this.snakeHead.y + 1);
-              case 'Left':
+              case "Left":
                   return new Pixel(this.snakeHead.x - 1, this.snakeHead.y);
           }
           return new Pixel(0, 0);
@@ -247,32 +247,32 @@
           context.fillRect(x, y, cellWidth, cellHeight);
           // eyes
           switch (this.snakeDirection[0]) {
-              case 'Up':
+              case "Up":
                   context.beginPath();
                   context.arc(x + offset, y + offset, size, 0, 2 * Math.PI, false);
                   context.arc(x + 2 * offset, y + offset, size, 0, 2 * Math.PI, false);
-                  context.fillStyle = 'white';
+                  context.fillStyle = "white";
                   context.fill();
                   break;
-              case 'Down':
+              case "Down":
                   context.beginPath();
                   context.arc(x + offset, y + 2 * offset, size, 0, 2 * Math.PI, false);
+                  context.arc(x + 2 * offset, y + 2 * offset, size, 0, 2 * Math.PI, false);
+                  context.fillStyle = "white";
+                  context.fill();
+                  break;
+              case "Right":
+                  context.beginPath();
+                  context.arc(x + 2 * offset, y + offset, size, 0, 2 * Math.PI, false);
                   context.arc(x + 2 * offset, y + 2 * offset, size, 0, 2 * Math.PI, false);
                   context.fillStyle = 'white';
                   context.fill();
                   break;
-              case 'Right':
-                  context.beginPath();
-                  context.arc(x + 2 * offset, y + offset, size, 0, 2 * Math.PI, false);
-                  context.arc(x + 2 * offset, y + 2 * offset, size, 0, 2 * Math.PI, false);
-                  context.fillStyle = 'white';
-                  context.fill();
-                  break;
-              case 'Left':
+              case "Left":
                   context.beginPath();
                   context.arc(x + offset, y + offset, size, 0, 2 * Math.PI, false);
                   context.arc(x + offset, y + 2 * offset, size, 0, 2 * Math.PI, false);
-                  context.fillStyle = 'white';
+                  context.fillStyle = "white";
                   context.fill();
                   break;
           }
@@ -304,10 +304,11 @@
           this.div = document.createElement("div");
           this.canvas = document.createElement('Canvas');
           this.div.appendChild(this.canvas);
-          let button1 = document.createElement("button");
-          button1.onclick = this.stopOnButton.bind(this);
-          button1.innerText = "Stop";
-          this.div.appendChild(button1);
+          this.buttonExit = document.createElement("button");
+          this.buttonExit.onclick = this.stopOnButton.bind(this);
+          this.buttonExit.innerText = "Exit";
+          this.buttonExit.setAttribute("class", "exitdesign");
+          this.div.appendChild(this.buttonExit);
           this.div.setAttribute("id", "playground");
           // canvas element size in the page
           this.canvas.style.width = WIDTH * PIXELSIZE + 'px';
@@ -344,11 +345,12 @@
       stop() {
           this.controlFunction = false;
       }
+      //ls: Stoppt das Spiel ON20 Special mit dem Button Exit
       stopOnButton() {
-          console.log("stop");
           this.stop();
           this.div.remove();
           const wrapper = document.getElementById("wrapper");
+          //ls: zuvor versteckter wrapper soll wieder erscheinen um erneut eine Auswahl zu treffen
           if (wrapper != null) {
               wrapper.style.display = "block";
           }
@@ -432,7 +434,7 @@
           }
       }
       win() {
-          alert("Congrats you beat the game!\r\n\r\nFinal Score: " + this.score);
+          alert("Congrats you beat Linda´s Snake Game!\r\n\r\nFinal Score: " + this.score);
           this.stop();
       }
       die() {
@@ -500,16 +502,16 @@
           context.fillStyle = color;
           context.fillRect(0, 0, width, height);
           // level
-          context.font = height + 'px Roboto Condensed';
-          context.textBaseline = 'middle';
-          context.textAlign = 'center';
-          context.fillStyle = 'rgba(0,0,0,0.1)';
+          context.font = height + "px Roboto Condensed";
+          context.textBaseline = "middle";
+          context.textAlign = "center";
+          context.fillStyle = "rgba(0,0,0,0.1)";
           context.fillText(String(level + 1), width / 2, height / 2);
           // score
-          context.font = 35 * SCALE + 'px Roboto Condensed';
-          context.textAlign = 'left';
-          context.textBaseline = 'top';
-          context.fillStyle = 'rgba(0,0,0,0.25)';
+          context.font = 35 * SCALE + "px Roboto Condensed";
+          context.textAlign = "left";
+          context.textBaseline = "top";
+          context.fillStyle = "rgba(0,0,0,0.25)";
           context.fillText(String(this.score), 10 * SCALE, 10 * SCALE);
           // playground
           this.playground.draw(time, context);
@@ -518,7 +520,7 @@
       }
       checkCondition() {
           const cell = this.snake.getSnakeHead();
-          // left the play area or ate itself?? 
+          // left the playground or ate itself?
           if (this.isOutside(cell) || this.snake.isSnake(cell)) {
               // dead
               return -1;
@@ -544,30 +546,29 @@
           context.fillStyle = color;
           context.fillRect(0, 0, width, height);
           // level
-          context.font = height + 'px Roboto Condensed';
-          context.textBaseline = 'middle';
-          context.textAlign = 'center';
-          context.fillStyle = 'rgba(0,0,0,0.1)';
+          context.font = height + "px Roboto Condensed";
+          context.textBaseline = "middle";
+          context.textAlign = "center";
+          context.fillStyle = "rgba(0,0,0,0.1)";
           context.fillText(String(level + 1), width / 2, height / 2);
           // score
-          context.font = 35 * SCALE + 'px Roboto Condensed';
-          context.textAlign = 'left';
-          context.textBaseline = 'top';
-          context.fillStyle = 'rgba(0,0,0,0.25)';
+          context.font = 35 * SCALE + "px Roboto Condensed";
+          context.textAlign = "left";
+          context.textBaseline = "top";
+          context.fillStyle = "rgba(0,0,0,0.25)";
           context.fillText(String(this.score), 10 * SCALE, 10 * SCALE);
           // playground
           this.playground.draw(time, context);
           //ls: ON20 Special 
           const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.setting;
-          context.fillStyle = 'rgb(52,52,52)';
+          context.fillStyle = "rgb(52,52,52)";
           bricksSpecial.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
           // snake
           this.snake.draw(time, context);
       }
       checkCondition() {
           const cell = this.snake.getSnakeHead();
-          // left the play area or ate itself?? 
-          //ls: OO20 Special check condition added
+          // left the playground or ate itself? 
           if (this.isOutside(cell) || this.snake.isSnake(cell) || this.crashedInBricks(cell)) {
               // dead
               return -1;
@@ -579,29 +580,29 @@
           // nothing special
           return 0;
       }
-      //ls: On20 Special function: if Snake crashed in Bricks? --> true
+      // ls: On20 Special function: if Snake crashed in Bricks? --> true
       crashedInBricks(pixel) {
           return bricksSpecial.find(el => pixel.x == el.x && pixel.y == el.y);
       }
   }
 
   //this is the main locic
-  class Test {
+  class MainMenu {
       constructor() {
           this.wrapper = document.createElement("div");
           this.wrapper.setAttribute("id", "wrapper");
           this.wrapper.setAttribute("class", "modiauswahl");
-          let button1 = document.createElement("button");
-          button1.onclick = this.startClassic;
-          button1.innerText = "Classic";
-          let button2 = document.createElement("button");
-          button2.onclick = this.startSpecial;
-          button2.innerText = "ON20-Special";
-          this.wrapper.appendChild(button1);
-          this.wrapper.appendChild(button2);
+          this.buttonClassic = document.createElement("button");
+          this.buttonClassic.onclick = this.startClassic;
+          this.buttonClassic.innerHTML = "Classic";
+          this.buttonSpecial = document.createElement("button");
+          this.buttonSpecial.onclick = this.startSpecial;
+          this.buttonSpecial.innerHTML = "ON20 Special";
+          this.wrapper.appendChild(this.buttonClassic);
+          this.wrapper.appendChild(this.buttonSpecial);
           document.body.appendChild(this.wrapper);
       }
-      //ls: Modus Classic
+      // ls: Modus Classic erstellt, gestartet, wrapper wird ausgeblendet
       startClassic() {
           const classic = new Classic();
           const wrapper = document.getElementById("wrapper");
@@ -610,50 +611,18 @@
           }
           classic.start();
       }
-      //ls: Modus ON20-Special
+      // ls: Modus ON20-Special erstellt, gestartet, wrapper wird ausgeblendet
       startSpecial() {
           const onSpecial = new OnSpecial();
           const wrapper = document.getElementById("wrapper");
           if (wrapper != null) {
               wrapper.style.display = "none";
           }
-          onSpecial.start(); //ls: Modus Classic
+          onSpecial.start();
       }
   }
+  // ls: Startet das Hauptmenü des Spiels
   window.focus();
-  new Test();
-  //window.focus();
-  //new Classic().start();      //ls: Modus Classic
-  //new OnSpecial().start();    //ls: Modus ON20-Special
-  /*window.focus = () => {
-      let div = document.createElement("div");
-      div.innerText = "hallo";
-  }*/
-  /* Elemente einblenden
-  // Mit show_elements() können einzelne oder mehrere Elemente
-  // via show_elements('ElementIDone','ElementIDtwo','ElementIDthree')
-  // eingeblendet werden.
-  function show_elements()
-   {
-    var elementNames = show_elements.arguments;
-    for (var i=0; i<elementNames.length; i++)
-     {
-       var elementName = elementNames[i];
-       document.getElementById(wrapper).style.display='block';
-     }
-   }
-  // Elemente ausblenden
-  // Mit show_elements() können einzelne oder mehrere Elemente
-  // via hide_elements('ElementIDone','ElementIDtwo','ElementIDthree')
-  // ausgeblendet werden.
-  function hide_elements()
-   {
-    var elementNames = hide_elements.arguments;
-    for (var i=0; i<elementNames.length; i++)
-     {
-       var elementName = elementNames[i];
-       document.getElementById(wrapper).style.display='none';
-     }
-   }*/
+  new MainMenu();
 
 }());

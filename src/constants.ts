@@ -10,16 +10,16 @@ export const KIWI = 1;
 
 // level background colors
 export const COLORS = [
-  '#fafafa',
-  '#ffffcc',
-  '#ffe6ee',
-  '#e6f2ff',
-  '#e6ffe6',
-  '#fff0e6',
-  '#e6e6ff',
-  '#f9f2ec',
-  '#e6ffe6',
-  '#ff4d4d',
+  "#fafafa",
+  "#ffffcc",
+  "#ffe6ee",
+  "#e6f2ff",
+  "#e6ffe6",
+  "#fff0e6",
+  "#e6e6ff",
+  "#f9f2ec",
+  "#e6ffe6",
+  "#ff4d4d",
 ];
 
 export interface Settings {
@@ -34,10 +34,10 @@ export interface Settings {
     color: string;
 }
 
-//ls: changed type to enum
-export enum Direction { 'Up' , 'Right' , 'Left' , 'Down' , null }
+// ls: Move directions (changed type to enum)
+export enum Direction { "Up" , "Right" , "Left" , "Down" , null }
 
-//ls: ON20 Special build the ON20 Bricks Array
+// ls: ON20 Special build the ON20 Bricks Array
 export const bricksSpecial = [
   //row 1
   {"x": 10, "y": 13},

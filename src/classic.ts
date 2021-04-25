@@ -19,17 +19,17 @@ export class Classic extends Game{
       context.fillRect(0,0,width,height);
     
       // level
-      context.font = height +'px Roboto Condensed';
-      context.textBaseline = 'middle';
-      context.textAlign = 'center';
-      context.fillStyle = 'rgba(0,0,0,0.1)';
+      context.font = height + "px Roboto Condensed";
+      context.textBaseline = "middle";
+      context.textAlign = "center";
+      context.fillStyle = "rgba(0,0,0,0.1)";
       context.fillText(String(level+1), width/2, height/2);
     
       // score
-      context.font = 35 * SCALE + 'px Roboto Condensed';
-      context.textAlign = 'left';
-      context.textBaseline = 'top';
-      context.fillStyle = 'rgba(0,0,0,0.25)';
+      context.font = 35 * SCALE + "px Roboto Condensed";
+      context.textAlign = "left";
+      context.textBaseline = "top";
+      context.fillStyle = "rgba(0,0,0,0.25)";
       context.fillText(String(this.score), 10*SCALE, 10*SCALE);
 
       // playground
@@ -41,11 +41,9 @@ export class Classic extends Game{
 
   checkCondition() {
 
-
-
       const cell = this.snake.getSnakeHead();
 
-      // left the play area or ate itself?? 
+      // left the playground or ate itself?
       if (this.isOutside(cell) || this.snake.isSnake(cell)) {
           // dead
           return -1;

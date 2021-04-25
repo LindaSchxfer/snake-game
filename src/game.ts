@@ -1,42 +1,42 @@
 //this is the main game logic
 
 import { Pixel as Pixel } from "./pixel";
-import { PIXELSIZE, COLORS, Settings as Setting, Direction, HEIGHT, MAX_LEVEL, SCALE, SPEED, WIDTH} from "./constants";
+import { PIXELSIZE, COLORS, Settings as Setting, HEIGHT, MAX_LEVEL, SCALE, SPEED, WIDTH} from "./constants";
 import { Playground as Playground } from "./playground";
 import { Snake } from "./snake";
 
-interface Touch{
-  pageX: number;
-  pageY: number;
-
-}
+    interface Touch{
+      pageX: number;
+      pageY: number;
+    }
 
 export class Game {
 
     public canvas: HTMLCanvasElement;
     public div: HTMLDivElement;
+    public buttonExit: HTMLButtonElement;
 
-  public score:number = 0;
-  public controlFunction: boolean = false;
-  public playground: Playground;
-  public snake: Snake;
-  public setting: Setting;  
-  public nextMove:number = 0;
-  public touch: Touch = {pageX:0, pageY:0};
+    public score:number = 0;
+    public controlFunction: boolean = false;
+    public playground: Playground;
+    public snake: Snake;
+    public setting: Setting;  
+    public nextMove:number = 0;
+    public touch: Touch = {pageX:0, pageY:0};
  
-
   constructor() {
 
-    this.div = document.createElement("div");
-
+      this.div = document.createElement("div");
       this.canvas = document.createElement('Canvas') as HTMLCanvasElement;
       this.div.appendChild(this.canvas);
 
-      let button1 = document.createElement("button");
-      button1.onclick = this.stopOnButton.bind(this);
-      button1.innerText = "Stop";
-      this.div.appendChild(button1);
+      this.buttonExit = document.createElement("button");
+      this.buttonExit.onclick = this.stopOnButton.bind(this);
+      this.buttonExit.innerText = "Exit";
+      this.buttonExit.setAttribute("class", "exitdesign")
+      this.div.appendChild(this.buttonExit);
       this.div.setAttribute("id", "playground");
+      
 
       // canvas element size in the page
       this.canvas.style.width = WIDTH * PIXELSIZE + 'px';
@@ -57,7 +57,7 @@ export class Game {
           pixelWidth: this.canvas.width / WIDTH,
           pixelHeight: this.canvas.height / HEIGHT,
           color: COLORS[0]
-      };
+      }
 
       this.snake = new Snake(this);
       this.playground = new Playground(this);
@@ -78,17 +78,18 @@ export class Game {
 
   stop() {
       this.controlFunction = false;
-      
   }
 
+  //ls: Stoppt das Spiel ON20 Special mit dem Button Exit
   stopOnButton(){
-    console.log("stop");
     this.stop();
     this.div.remove();
     const wrapper = document.getElementById("wrapper");
-  if(wrapper != null){
-    wrapper.style.display = "block";
-  }    
+
+      //ls: zuvor versteckter wrapper soll wieder erscheinen um erneut eine Auswahl zu treffen
+      if(wrapper != null){
+      wrapper.style.display = "block";
+      }    
   }
 
   getSettings() {
@@ -160,8 +161,6 @@ export class Game {
 
   checkCondition() {
 
-
-    
       const cell = this.snake.getSnakeHead();
 
       // left the play area or ate itself?? 
@@ -192,7 +191,7 @@ export class Game {
   }
 
   win() {
-    alert("Congrats you beat the game!\r\n\r\nFinal Score: " + this.score);
+    alert("Congrats you beat Linda´s Snake Game!\r\n\r\nFinal Score: " + this.score);
     this.stop();       
   }
 

@@ -31,16 +31,16 @@ export class Snake {
 
   setDirection(direction:String) {
       const lastDirection = this.snakeDirection[this.snakeDirection.length-1];
-      if(lastDirection == 'Up' && (direction == 'Down' || direction == 'Up')) {
+      if(lastDirection == "Up" && (direction == "Down" || direction == "Up")) {
         return;
       }
-      if(lastDirection == 'Down' && (direction == 'Up' || direction == 'Down')) {
+      if(lastDirection == "Down" && (direction == "Up" || direction == "Down")) {
         return;
       }
-      if(lastDirection == 'Left' && (direction == 'Right' || direction == 'Left')) {
+      if(lastDirection == "Left" && (direction == "Right" || direction == "Left")) {
         return;
       }
-      if(lastDirection == 'Right' && (direction == 'Left' || direction == 'Right')) {
+      if(lastDirection == "Right" && (direction == "Left" || direction == "Right")) {
         return;
       }
       this.snakeDirection.push(direction);
@@ -63,13 +63,13 @@ export class Snake {
   getNext():Pixel {
       const direction = this.snakeDirection.length > 1 ? this.snakeDirection.splice(0,1)[0] : this.snakeDirection[0];
       switch (direction) {
-          case 'Up':
+          case "Up":
               return new Pixel(this.snakeHead.x, this.snakeHead.y - 1);
-          case 'Right':
+          case "Right":
               return new Pixel(this.snakeHead.x+1, this.snakeHead.y);
-          case 'Down':
+          case "Down":
               return new Pixel(this.snakeHead.x, this.snakeHead.y + 1);
-          case 'Left':
+          case "Left":
               return new Pixel(this.snakeHead.x-1, this.snakeHead.y);
       }
       return new Pixel(0,0);
@@ -88,32 +88,32 @@ export class Snake {
 
       // eyes
       switch(this.snakeDirection[0]) {
-        case 'Up':
+        case "Up":
            context.beginPath();
            context.arc(x + offset, y + offset, size, 0, 2 * Math.PI, false);
            context.arc(x + 2 * offset, y + offset, size, 0, 2 * Math.PI, false);
-           context.fillStyle = 'white';
+           context.fillStyle = "white";
            context.fill();
           break;
-          case 'Down':
+          case "Down":
            context.beginPath();
            context.arc(x + offset, y + 2*offset, size, 0, 2 * Math.PI, false);
            context.arc(x + 2 * offset, y + 2*offset, size, 0, 2 * Math.PI, false);
-           context.fillStyle = 'white';
+           context.fillStyle = "white";
            context.fill();
           break;
-          case 'Right':
+          case "Right":
            context.beginPath();
            context.arc(x + 2 * offset, y + offset, size, 0, 2 * Math.PI, false);
            context.arc(x + 2 * offset, y + 2 * offset, size, 0, 2 * Math.PI, false);
            context.fillStyle = 'white';
            context.fill();
           break;
-          case 'Left':
+          case "Left":
            context.beginPath();
            context.arc(x + offset, y + offset, size, 0, 2 * Math.PI, false);
            context.arc(x + offset, y + 2 * offset, size, 0, 2 * Math.PI, false);
-           context.fillStyle = 'white';
+           context.fillStyle = "white";
            context.fill();
           break;
       }

@@ -29,7 +29,7 @@ export class Playground {
 
       const { width, height, pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
 
-      context.fillStyle = 'black';
+      context.fillStyle = "black";
       context.lineWidth = 1 * SCALE;
 
       for (let x = 0; x <= width; x += cellWidth) {
@@ -47,7 +47,7 @@ export class Playground {
       }
 
       // kiwi
-      context.fillStyle = '#03DAC5';
+      context.fillStyle = "#03DAC5";
       this.kiwi.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
   }
 

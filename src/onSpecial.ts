@@ -20,17 +20,17 @@ export class OnSpecial extends Game{
       context.fillRect(0,0,width,height);
     
       // level
-      context.font = height+'px Roboto Condensed';
-      context.textBaseline = 'middle';
-      context.textAlign = 'center';
-      context.fillStyle = 'rgba(0,0,0,0.1)';
+      context.font = height + "px Roboto Condensed";
+      context.textBaseline = "middle";
+      context.textAlign = "center";
+      context.fillStyle = "rgba(0,0,0,0.1)";
       context.fillText(String(level+1), width/2, height/2);
     
       // score
-      context.font = 35 * SCALE + 'px Roboto Condensed';
-      context.textAlign = 'left';
-      context.textBaseline = 'top';
-      context.fillStyle = 'rgba(0,0,0,0.25)';
+      context.font = 35 * SCALE + "px Roboto Condensed";
+      context.textAlign = "left";
+      context.textBaseline = "top";
+      context.fillStyle = "rgba(0,0,0,0.25)";
       context.fillText(String(this.score), 10*SCALE, 10*SCALE);
 
       // playground
@@ -38,7 +38,7 @@ export class OnSpecial extends Game{
     
       //ls: ON20 Special 
       const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.setting;
-      context.fillStyle = 'rgb(52,52,52)';
+      context.fillStyle = "rgb(52,52,52)";
       bricksSpecial.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight))
 
       // snake
@@ -49,8 +49,7 @@ export class OnSpecial extends Game{
 
       const cell = this.snake.getSnakeHead();
 
-      // left the play area or ate itself?? 
-      //ls: OO20 Special check condition added
+      // left the playground or ate itself? 
       if (this.isOutside(cell) || this.snake.isSnake(cell)|| this.crashedInBricks(cell)) {
           // dead
           return -1;
@@ -65,7 +64,7 @@ export class OnSpecial extends Game{
       return 0;
   }
 
-  //ls: On20 Special function: if Snake crashed in Bricks? --> true
+    // ls: On20 Special function: if Snake crashed in Bricks? --> true
     crashedInBricks(pixel: Pixel){
     return bricksSpecial.find(el => pixel.x == el.x && pixel.y == el.y);
   }
