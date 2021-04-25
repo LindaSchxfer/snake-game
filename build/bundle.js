@@ -301,8 +301,14 @@
           this.controlFunction = false;
           this.nextMove = 0;
           this.touch = { pageX: 0, pageY: 0 };
+          this.div = document.createElement("div");
           this.canvas = document.createElement('Canvas');
-          document.body.appendChild(this.canvas);
+          this.div.appendChild(this.canvas);
+          let button1 = document.createElement("button");
+          button1.onclick = this.stopOnButton.bind(this);
+          button1.innerText = "Stop";
+          this.div.appendChild(button1);
+          this.div.setAttribute("id", "playground");
           // canvas element size in the page
           this.canvas.style.width = WIDTH * PIXELSIZE + 'px';
           this.canvas.style.height = HEIGHT * PIXELSIZE + 'px';
@@ -328,6 +334,7 @@
           this.canvas.addEventListener('touchstart', this.onTouchStart.bind(this), false);
           this.canvas.addEventListener('touchmove', this.onTouchMove.bind(this), false);
           this.canvas.addEventListener('touchend', this.onTouchEnd.bind(this), false);
+          document.body.appendChild(this.div);
       }
       start() {
           this.nextMove = 0;
@@ -336,6 +343,15 @@
       }
       stop() {
           this.controlFunction = false;
+      }
+      stopOnButton() {
+          console.log("stop");
+          this.stop();
+          this.div.remove();
+          const wrapper = document.getElementById("wrapper");
+          if (wrapper != null) {
+              wrapper.style.display = "block";
+          }
       }
       getSettings() {
           return this.setting;
@@ -570,12 +586,74 @@
   }
 
   //this is the main locic
+  class Test {
+      constructor() {
+          this.wrapper = document.createElement("div");
+          this.wrapper.setAttribute("id", "wrapper");
+          this.wrapper.setAttribute("class", "modiauswahl");
+          let button1 = document.createElement("button");
+          button1.onclick = this.startClassic;
+          button1.innerText = "Classic";
+          let button2 = document.createElement("button");
+          button2.onclick = this.startSpecial;
+          button2.innerText = "ON20-Special";
+          this.wrapper.appendChild(button1);
+          this.wrapper.appendChild(button2);
+          document.body.appendChild(this.wrapper);
+      }
+      //ls: Modus Classic
+      startClassic() {
+          const classic = new Classic();
+          const wrapper = document.getElementById("wrapper");
+          if (wrapper != null) {
+              wrapper.style.display = "none";
+          }
+          classic.start();
+      }
+      //ls: Modus ON20-Special
+      startSpecial() {
+          const onSpecial = new OnSpecial();
+          const wrapper = document.getElementById("wrapper");
+          if (wrapper != null) {
+              wrapper.style.display = "none";
+          }
+          onSpecial.start(); //ls: Modus Classic
+      }
+  }
   window.focus();
-  new Classic().start(); //ls: Modus Classic
-  new OnSpecial().start(); //ls: Modus ON20-Special
+  new Test();
+  //window.focus();
+  //new Classic().start();      //ls: Modus Classic
+  //new OnSpecial().start();    //ls: Modus ON20-Special
   /*window.focus = () => {
       let div = document.createElement("div");
       div.innerText = "hallo";
   }*/
+  /* Elemente einblenden
+  // Mit show_elements() können einzelne oder mehrere Elemente
+  // via show_elements('ElementIDone','ElementIDtwo','ElementIDthree')
+  // eingeblendet werden.
+  function show_elements()
+   {
+    var elementNames = show_elements.arguments;
+    for (var i=0; i<elementNames.length; i++)
+     {
+       var elementName = elementNames[i];
+       document.getElementById(wrapper).style.display='block';
+     }
+   }
+  // Elemente ausblenden
+  // Mit show_elements() können einzelne oder mehrere Elemente
+  // via hide_elements('ElementIDone','ElementIDtwo','ElementIDthree')
+  // ausgeblendet werden.
+  function hide_elements()
+   {
+    var elementNames = hide_elements.arguments;
+    for (var i=0; i<elementNames.length; i++)
+     {
+       var elementName = elementNames[i];
+       document.getElementById(wrapper).style.display='none';
+     }
+   }*/
 
 }());

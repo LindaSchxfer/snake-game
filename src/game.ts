@@ -14,6 +14,7 @@ interface Touch{
 export class Game {
 
     public canvas: HTMLCanvasElement;
+    public div: HTMLDivElement;
 
   public score:number = 0;
   public controlFunction: boolean = false;
@@ -22,11 +23,20 @@ export class Game {
   public setting: Setting;  
   public nextMove:number = 0;
   public touch: Touch = {pageX:0, pageY:0};
+ 
 
   constructor() {
 
+    this.div = document.createElement("div");
+
       this.canvas = document.createElement('Canvas') as HTMLCanvasElement;
-      document.body.appendChild(this.canvas);
+      this.div.appendChild(this.canvas);
+
+      let button1 = document.createElement("button");
+      button1.onclick = this.stopOnButton.bind(this);
+      button1.innerText = "Stop";
+      this.div.appendChild(button1);
+      this.div.setAttribute("id", "playground");
 
       // canvas element size in the page
       this.canvas.style.width = WIDTH * PIXELSIZE + 'px';
@@ -57,6 +67,7 @@ export class Game {
       this.canvas.addEventListener('touchstart', this.onTouchStart.bind(this), false);
       this.canvas.addEventListener('touchmove', this.onTouchMove.bind(this), false);
       this.canvas.addEventListener('touchend', this.onTouchEnd.bind(this), false);
+      document.body.appendChild(this.div);
   }
 
   start() {
@@ -67,6 +78,17 @@ export class Game {
 
   stop() {
       this.controlFunction = false;
+      
+  }
+
+  stopOnButton(){
+    console.log("stop");
+    this.stop();
+    this.div.remove();
+    const wrapper = document.getElementById("wrapper");
+  if(wrapper != null){
+    wrapper.style.display = "block";
+  }    
   }
 
   getSettings() {
@@ -138,6 +160,8 @@ export class Game {
 
   checkCondition() {
 
+
+    
       const cell = this.snake.getSnakeHead();
 
       // left the play area or ate itself?? 

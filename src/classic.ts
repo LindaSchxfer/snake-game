@@ -41,6 +41,8 @@ export class Classic extends Game{
 
   checkCondition() {
 
+
+
       const cell = this.snake.getSnakeHead();
 
       // left the play area or ate itself?? 

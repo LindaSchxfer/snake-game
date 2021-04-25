@@ -3,7 +3,55 @@ body {
     text-align: center;
   }
 
-  h1{
-    font-family: 'Roboto Condensed', sans-serif;
-    font-weight: 300;
+  .header{
+    background-color: #DBDBDB;
+    border-color: #707070;
+    border-style: solid;    
+    border-width: 2px;
+    width: 1200px;
+    margin: 0px auto;
+    text-align: left;
   }
+
+  h1, h2, button{
+    font-family: 'Roboto Condensed', sans-serif;
+  }
+  
+  h1{
+    font-weight: 400;
+    font-size: 40px;
+    display: inline;
+  }
+
+  h2{
+    font-size: 38px;
+    font-weight: 400;
+    display: inline;
+  }
+
+  button{
+    font-weight: 400;
+    font-size: 20px;
+    width: 250px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #BB86FC;  
+    margin: 0 auto;  
+  }
+
+  button.exit{
+    width: 50px;
+    float: right;
+  }
+
+  .modiauswahl{
+    display: grid;
+    position: absolute;
+    margin: 8% 44%;   
+  }
+
+  .modiauswahl button{
+    margin-top: 15px;
+  }
+
+ 
