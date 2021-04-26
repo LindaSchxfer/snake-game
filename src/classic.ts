@@ -6,59 +6,60 @@ import { Playground } from "./playground";
 
 export class Classic extends Game{
 
-  constructor() {
+    constructor() {
       super();
+      // ls: liefert für den specialMode in playground.ts false
       this.playground = new Playground(this, false);
-  }
+    }
 
-  display(time:number) {
+    display(time:number) {
     
       const {width, height, color, level} = this.setting;
       const context = this.canvas.getContext("2d") as CanvasRenderingContext2D;   
     
-      // background
+      // Hintergrund
       context.fillStyle = color;
       context.fillRect(0,0,width,height);
     
-      // level
+      // Level
       context.font = height + "px Roboto Condensed";
       context.textBaseline = "middle";
       context.textAlign = "center";
       context.fillStyle = "rgba(0,0,0,0.1)";
       context.fillText(String(level+1), width/2, height/2);
     
-      // score
+      // Punktzahl
       context.font = 35 * SCALE + "px Roboto Condensed";
       context.textAlign = "left";
       context.textBaseline = "top";
       context.fillStyle = "rgba(0,0,0,0.25)";
       context.fillText(String(this.score), 10*SCALE, 10*SCALE);
 
-      // playground
+      // Spielfeld
       this.playground.draw(time, context);
 
-      // snake
+      // Schlange neu gezeichnet
       this.snake.draw(time, context);
-  }
+    }
 
-  checkCondition() {
+    checkCondition() {
 
       const cell = this.snake.getSnakeHead();
 
-      // left the playground or ate itself?
+      // Das Spielfeld verlassen? Sich selbst gefressen?
       if (this.isOutside(cell) || this.snake.isSnake(cell)) {
-          // dead
+          // Tod
           return -1;
       }
 
-      // ate kiwi?
+      // Kiwi gefressen?
       if (this.playground.isKiwi(cell)) {
           return 1;
       }
 
-      // nothing special
+      // nichts Besonderes
       return 0;
-  } 
+    } 
 }
 
 
