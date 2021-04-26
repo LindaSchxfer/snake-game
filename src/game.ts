@@ -1,14 +1,10 @@
 //this is the main game logic
 
-import { Pixel as Pixel } from "./pixel";
-import { PIXELSIZE, COLORS, Settings as Setting, HEIGHT, MAX_LEVEL, SCALE, SPEED, WIDTH} from "./constants";
+import { PIXELSIZE, COLORS, Settings as Setting, HEIGHT, MAX_LEVEL, SCALE, SPEED, WIDTH, Pixel} from "./constants";
 import { Playground as Playground } from "./playground";
 import { Snake } from "./snake";
 
-    interface Touch{
-      pageX: number;
-      pageY: number;
-    }
+
 
 export class Game {
 
@@ -22,7 +18,7 @@ export class Game {
     public snake: Snake;
     public setting: Setting;  
     public nextMove:number = 0;
-    public touch: Touch = {pageX:0, pageY:0};
+   
  
   constructor() {
 
@@ -33,7 +29,7 @@ export class Game {
       this.buttonExit = document.createElement("button");
       this.buttonExit.onclick = this.stopOnButton.bind(this);
       this.buttonExit.innerText = "Exit";
-      this.buttonExit.setAttribute("class", "exitdesign")
+      this.buttonExit.setAttribute("class", "exitdesign");
       this.div.appendChild(this.buttonExit);
       this.div.setAttribute("id", "playground");
       
@@ -60,13 +56,10 @@ export class Game {
       }
 
       this.snake = new Snake(this);
-      this.playground = new Playground(this);
+      this.playground = new Playground(this, false);
     
       // event listeners
       window.addEventListener('keydown', this.onKeyDown.bind(this), false);
-      this.canvas.addEventListener('touchstart', this.onTouchStart.bind(this), false);
-      this.canvas.addEventListener('touchmove', this.onTouchMove.bind(this), false);
-      this.canvas.addEventListener('touchend', this.onTouchEnd.bind(this), false);
       document.body.appendChild(this.div);
   }
 
@@ -98,18 +91,23 @@ export class Game {
 
   loop(time:number) {
 
+ 
+
       if(this.controlFunction) {
         
         requestAnimationFrame(this.loop.bind(this));
         
+        //prüfe ob Zeit ist  für nächster spielzug
         if (time >= this.nextMove) {
           
+          
+            //Zeitpunkt für den nächsten spielzug setzte
             this.nextMove = time + this.setting.speed;
           
-            // move once
+            // move once  schlange bewegen
             this.snake.move();
                         
-            // check what happened  
+            // prüfe ob spiel zu ende / level up / oder normal weiter 
             switch (this.checkCondition()) {
                 case -1:
                     this.die();
@@ -125,10 +123,11 @@ export class Game {
                     // update display
                     this.display(time);
             }
-        }
+        } 
       }
   }
 
+  //Aktualisiert das Canvas 
   display(time:number) {
     
       const {width, height, color, level} = this.setting;
@@ -139,28 +138,29 @@ export class Game {
       context.fillRect(0,0,width,height);
     
       // level
-      context.font = height+'px Roboto Condensed';
-      context.textBaseline = 'middle';
-      context.textAlign = 'center';
-      context.fillStyle = 'rgba(0,0,0,0.1)';
+      context.font = height+"px Roboto Condensed";
+      context.textBaseline = "middle";
+      context.textAlign = "center";
+      context.fillStyle = "rgba(0,0,0,0.1)";
       context.fillText(String(level+1), width/2, height/2);
     
       // score
-      context.font = 35 * SCALE + 'px Roboto Condensed';
-      context.textAlign = 'left';
-      context.textBaseline = 'top';
-      context.fillStyle = 'rgba(0,0,0,0.25)';
+      context.font = 35 * SCALE + "px Roboto Condensed";
+      context.textAlign = "left";
+      context.textBaseline = "top";
+      context.fillStyle = "rgba(0,0,0,0.25)";
       context.fillText(String(this.score), 10*SCALE, 10*SCALE);
 
       // playground
       this.playground.draw(time, context);    
 
-      // snake
+      // snake neu gezeichnet
       this.snake.draw(time, context);
   }
 
   checkCondition() {
 
+      //position des Kopfes der Schlange
       const cell = this.snake.getSnakeHead();
 
       // left the play area or ate itself?? 
@@ -178,13 +178,14 @@ export class Game {
       return 0;
   }
 
+  //alle Kiwis der Runde sind gegessen
   levelUp() {
     this.score += 1000;
     this.setting.level++;
     if(this.setting.level < MAX_LEVEL) {
-      this.setting.speed -= 7;
-      this.setting.color = COLORS[this.setting.level];
-      this.playground.scatter();
+      this.setting.speed -= 7;    //spiel verschnellern
+      this.setting.color = COLORS[this.setting.level];  //Hntergrundfarbe ändern
+      this.playground.scatter(); //Kiwis verstreuen
     } else {
       this.win();
     }
@@ -200,11 +201,13 @@ export class Game {
     this.stop();
   }
 
+  //Prüfe ob kopf außerhalb des Canvas
   isOutside(pixel: Pixel) {
       const { nbPixelX: nbCellsX, nbPixelY: nbCellsY } = this.setting;
+      // links aus dem Spiel raus / rechts aus dem Spiel raus / oben aus dem speiel Raus / unten aus dem Spiel raus
       return pixel.x < 0 || pixel.x >= nbCellsX || pixel.y < 0 || pixel.y >= nbCellsY;
   }
-
+//Prüfe welche Pfeiltaste gedrückt wurde
  onKeyDown(event:KeyboardEvent) {
      switch(event.key) {
        case 'ArrowUp':
@@ -224,37 +227,5 @@ export class Game {
          this.snake.setDirection('Right');
          break;
      }
-  }
-
-  onTouchStart(e:TouchEvent) {
-      this.touch = e.changedTouches[0];
-      e.preventDefault();
-  }
-
-  onTouchMove(e:TouchEvent){
-      e.preventDefault();
-  }
-
-  onTouchEnd(e:TouchEvent){
-    
-      const touch:Touch = e.changedTouches[0]
-      
-      const distX = touch.pageX - this.touch.pageX;
-      const distY = touch.pageY - this.touch.pageY;
-      
-      let direction:String = "";
-
-      if (Math.abs(distX) >= 100){ 
-        direction = (distX < 0)? 'Left' : 'Right';
-      }
-      else if (Math.abs(distY) >= 100){
-        direction = (distY < 0)? 'Up' : 'Down';
-      }
-      
-      if(direction) {
-        this.snake.setDirection(direction);
-      }
-      
-      e.preventDefault()
   }
 }

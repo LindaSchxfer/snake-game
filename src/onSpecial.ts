@@ -1,13 +1,14 @@
 //this is the mode ON20-Special
 
-import { Pixel as Pixel } from "./pixel";
 import { Game } from "./game";
-import { SCALE, bricksSpecial } from "./constants";
+import { SCALE, bricksSpecial, Pixel } from "./constants";
+import { Playground } from "./playground";
 
 export class OnSpecial extends Game{
 
   constructor() {
       super();
+      this.playground = new Playground(this, true);
   }
 
   display(time:number) {

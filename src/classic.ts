@@ -2,11 +2,13 @@
 
 import { SCALE } from "./constants";
 import { Game } from "./game";
+import { Playground } from "./playground";
 
 export class Classic extends Game{
 
   constructor() {
       super();
+      this.playground = new Playground(this, false);
   }
 
   display(time:number) {

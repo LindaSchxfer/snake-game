@@ -34,6 +34,17 @@ export interface Settings {
     color: string;
 }
 
+export class Pixel {
+
+  x:number;
+  y: number;
+  
+  constructor(x:number, y:number) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
 // ls: Move directions (changed type to enum)
 export enum Direction { "Up" , "Right" , "Left" , "Down" , null }
 

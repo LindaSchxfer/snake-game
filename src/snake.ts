@@ -1,13 +1,12 @@
 // this is the snake
 
-import { Pixel } from "./pixel";
-import { PIXELSIZE, Direction, SCALE } from "./constants";
+import { PIXELSIZE, Direction, SCALE, Pixel } from "./constants";
 import { Game } from "./game";
 
 export class Snake {
 
   readonly ORIGINAL_SIZE = 3;
-  readonly ORININAL_DIRECTION = 'Right';
+  readonly ORIGINAL_DIRECTION = "Right";
   readonly ORIGINAL_POSITION = { x: 1, y: 1 };
 
   private snakeHead: Pixel;
@@ -20,7 +19,7 @@ export class Snake {
       this.game = game;
      
       this.size = this.ORIGINAL_SIZE;
-      this.snakeDirection = [this.ORININAL_DIRECTION];
+      this.snakeDirection = [this.ORIGINAL_DIRECTION];
       
       // original head
       this.snakeHead = new Pixel(this.ORIGINAL_POSITION.x, this.ORIGINAL_POSITION.y);
@@ -29,6 +28,7 @@ export class Snake {
       this.snakeTail = [];
   }
 
+  //Welche richtung
   setDirection(direction:String) {
       const lastDirection = this.snakeDirection[this.snakeDirection.length-1];
       if(lastDirection == "Up" && (direction == "Down" || direction == "Up")) {
@@ -46,6 +46,7 @@ export class Snake {
       this.snakeDirection.push(direction);
   }
 
+  //bewegung der Schlange 
   move() {
     
       // add current head to tail
@@ -54,12 +55,13 @@ export class Snake {
       // get next position
       this.snakeHead = this.getNext();
 
-      // fix the snake size
+      // fix the snake size wenn kopf weter ein stüch schwanz weg
       if (this.snakeTail.length > this.size) {
           this.snakeTail.splice(0, 1);
       }
   }
 
+  //ermittelt abhängig von der Richtung die x und y werte des neuen kopfes
   getNext():Pixel {
       const direction = this.snakeDirection.length > 1 ? this.snakeDirection.splice(0,1)[0] : this.snakeDirection[0];
       switch (direction) {
@@ -75,6 +77,7 @@ export class Snake {
       return new Pixel(0,0);
   }
 
+  //Schlange wird gezeichnet
   draw(time: number, context:CanvasRenderingContext2D) {
       const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
 
@@ -123,18 +126,17 @@ export class Snake {
       this.snakeTail.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));    
   }
 
+  //Schlange wird verlängert
   lengthen(qty:number = 3) {
       this.size += qty;
   }
-
-  shorten(qty:number = 3) {
-      this.size -= qty;
-  }
-
+  
+  //gebe x und y wert des kopfes zurück
   getSnakeHead() {
       return this.snakeHead;
   }
 
+  //für die selbstfressfunktion ist schwanz und kopf gleich?
   isSnake(pixel: Pixel) {
        return this.snakeTail.find(el => pixel.x == el.x && pixel.y == el.y);
   }

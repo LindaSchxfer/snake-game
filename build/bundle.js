@@ -22,6 +22,12 @@
       "#e6ffe6",
       "#ff4d4d",
   ];
+  class Pixel {
+      constructor(x, y) {
+          this.x = x;
+          this.y = y;
+      }
+  }
   // ls: Move directions (changed type to enum)
   var Direction;
   (function (Direction) {
@@ -127,30 +133,41 @@
       { "x": 49, "y": 22 }
   ];
 
-  //this is the grid
-  class Pixel {
-      constructor(x, y) {
-          this.x = x;
-          this.y = y;
-      }
-  }
-
   // this is the playground
   class Playground {
-      constructor(game) {
+      constructor(game, specialMode) {
           this.game = game;
           this.kiwi = [];
           this.scatter();
+          this.specialMode = specialMode;
       }
+      //Kiwis werden verstreut
       scatter() {
           const { nbPixelX: nbCellsX, nbPixelY: nbCellsY, level } = this.game.getSettings();
           const nbKiwi = KIWI * (level + 1);
           for (let count = 0; count < nbKiwi; count++) {
-              let x = Math.floor(Math.random() * nbCellsX);
-              let y = Math.floor(Math.random() * nbCellsY);
-              this.kiwi.push(new Pixel(x, y));
+              let condition = true;
+              while (condition === true) {
+                  let x = Math.floor(Math.random() * nbCellsX);
+                  let y = Math.floor(Math.random() * nbCellsY);
+                  //Prüfe falls special mode aktiv ist, wenn ja keine Kiwie innserhalb der Bricks
+                  if (this.specialMode === true) {
+                      console.log("specialMode");
+                      //Prüfe ob die random ausgewählte Kiwi innerhalb der bricks liegt
+                      if (bricksSpecial.find(el => x == el.x && y == el.y) == undefined) {
+                          this.kiwi.push(new Pixel(x, y));
+                          condition = false;
+                      }
+                      //normale mode muss dies nicht prüfen
+                  }
+                  else {
+                      this.kiwi.push(new Pixel(x, y));
+                      condition = false;
+                  }
+              }
           }
       }
+      //das Canvas wird aufgespannt
       draw(time, context) {
           const { width, height, pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
           context.fillStyle = "black";
@@ -167,16 +184,19 @@
               context.lineTo(width, y);
               context.stroke();
           }
-          // kiwi
+          // kiwi aussehen
           context.fillStyle = "#03DAC5";
-          this.kiwi.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
+          this.kiwi.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight)); //ändere Farbe der Celle (x und y wert) die eine Kiwi ist
       }
+      //Prüfe ob die Zelle eine Kiwi ist
       isKiwi(cell) {
           return this.kiwi.find(el => cell.x == el.x && cell.y == el.y);
       }
+      // gegessene Kiwi wird aus dem Array herausgefiltert 
       eatKiwi(pixel) {
           this.kiwi = this.kiwi.filter(el => pixel.x != el.x || pixel.y != el.y);
       }
+      //schauen ob alle Kiwis des Level gefressen sind
       isDone() {
           return this.kiwi.length == 0;
       }
@@ -186,16 +206,17 @@
   class Snake {
       constructor(game) {
           this.ORIGINAL_SIZE = 3;
-          this.ORININAL_DIRECTION = 'Right';
+          this.ORIGINAL_DIRECTION = "Right";
           this.ORIGINAL_POSITION = { x: 1, y: 1 };
           this.game = game;
           this.size = this.ORIGINAL_SIZE;
-          this.snakeDirection = [this.ORININAL_DIRECTION];
+          this.snakeDirection = [this.ORIGINAL_DIRECTION];
           // original head
           this.snakeHead = new Pixel(this.ORIGINAL_POSITION.x, this.ORIGINAL_POSITION.y);
           // original tail
           this.snakeTail = [];
       }
+      //Welche richtung
       setDirection(direction) {
           const lastDirection = this.snakeDirection[this.snakeDirection.length - 1];
           if (lastDirection == "Up" && (direction == "Down" || direction == "Up")) {
@@ -212,16 +233,18 @@
           }
           this.snakeDirection.push(direction);
       }
+      //bewegung der Schlange 
       move() {
           // add current head to tail
           this.snakeTail.push(this.snakeHead);
           // get next position
           this.snakeHead = this.getNext();
-          // fix the snake size
+          // fix the snake size wenn kopf weter ein stüch schwanz weg
           if (this.snakeTail.length > this.size) {
               this.snakeTail.splice(0, 1);
           }
       }
+      //ermittelt abhängig von der Richtung die x und y werte des neuen kopfes
       getNext() {
           const direction = this.snakeDirection.length > 1 ? this.snakeDirection.splice(0, 1)[0] : this.snakeDirection[0];
           switch (direction) {
@@ -236,6 +259,7 @@
           }
           return new Pixel(0, 0);
       }
+      //Schlange wird gezeichnet
       draw(time, context) {
           const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
           // head
@@ -280,15 +304,15 @@
           context.fillStyle = "#BB86FC";
           this.snakeTail.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
       }
+      //Schlange wird verlängert
       lengthen(qty = 3) {
           this.size += qty;
       }
-      shorten(qty = 3) {
-          this.size -= qty;
-      }
+      //gebe x und y wert des kopfes zurück
       getSnakeHead() {
           return this.snakeHead;
       }
+      //für die selbstfressfunktion ist schwanz und kopf gleich?
       isSnake(pixel) {
           return this.snakeTail.find(el => pixel.x == el.x && pixel.y == el.y);
       }
@@ -300,7 +324,6 @@
           this.score = 0;
           this.controlFunction = false;
           this.nextMove = 0;
-          this.touch = { pageX: 0, pageY: 0 };
           this.div = document.createElement("div");
           this.canvas = document.createElement('Canvas');
           this.div.appendChild(this.canvas);
@@ -329,12 +352,9 @@
               color: COLORS[0]
           };
           this.snake = new Snake(this);
-          this.playground = new Playground(this);
+          this.playground = new Playground(this, false);
           // event listeners
           window.addEventListener('keydown', this.onKeyDown.bind(this), false);
-          this.canvas.addEventListener('touchstart', this.onTouchStart.bind(this), false);
-          this.canvas.addEventListener('touchmove', this.onTouchMove.bind(this), false);
-          this.canvas.addEventListener('touchend', this.onTouchEnd.bind(this), false);
           document.body.appendChild(this.div);
       }
       start() {
@@ -361,11 +381,13 @@
       loop(time) {
           if (this.controlFunction) {
               requestAnimationFrame(this.loop.bind(this));
+              //prüfe ob Zeit ist  für nächster spielzug
               if (time >= this.nextMove) {
+                  //Zeitpunkt für den nächsten spielzug setzte
                   this.nextMove = time + this.setting.speed;
-                  // move once
+                  // move once  schlange bewegen
                   this.snake.move();
-                  // check what happened  
+                  // prüfe ob spiel zu ende / level up / oder normal weiter 
                   switch (this.checkCondition()) {
                       case -1:
                           this.die();
@@ -384,6 +406,7 @@
               }
           }
       }
+      //Aktualisiert das Canvas 
       display(time) {
           const { width, height, color, level } = this.setting;
           const context = this.canvas.getContext("2d");
@@ -391,23 +414,24 @@
           context.fillStyle = color;
           context.fillRect(0, 0, width, height);
           // level
-          context.font = height + 'px Roboto Condensed';
-          context.textBaseline = 'middle';
-          context.textAlign = 'center';
-          context.fillStyle = 'rgba(0,0,0,0.1)';
+          context.font = height + "px Roboto Condensed";
+          context.textBaseline = "middle";
+          context.textAlign = "center";
+          context.fillStyle = "rgba(0,0,0,0.1)";
           context.fillText(String(level + 1), width / 2, height / 2);
           // score
-          context.font = 35 * SCALE + 'px Roboto Condensed';
-          context.textAlign = 'left';
-          context.textBaseline = 'top';
-          context.fillStyle = 'rgba(0,0,0,0.25)';
+          context.font = 35 * SCALE + "px Roboto Condensed";
+          context.textAlign = "left";
+          context.textBaseline = "top";
+          context.fillStyle = "rgba(0,0,0,0.25)";
           context.fillText(String(this.score), 10 * SCALE, 10 * SCALE);
           // playground
           this.playground.draw(time, context);
-          // snake
+          // snake neu gezeichnet
           this.snake.draw(time, context);
       }
       checkCondition() {
+          //position des Kopfes der Schlange
           const cell = this.snake.getSnakeHead();
           // left the play area or ate itself?? 
           if (this.isOutside(cell) || this.snake.isSnake(cell)) {
@@ -421,13 +445,14 @@
           // nothing special
           return 0;
       }
+      //alle Kiwis der Runde sind gegessen
       levelUp() {
           this.score += 1000;
           this.setting.level++;
           if (this.setting.level < MAX_LEVEL) {
-              this.setting.speed -= 7;
-              this.setting.color = COLORS[this.setting.level];
-              this.playground.scatter();
+              this.setting.speed -= 7; //spiel verschnellern
+              this.setting.color = COLORS[this.setting.level]; //Hntergrundfarbe ändern
+              this.playground.scatter(); //Kiwis verstreuen
           }
           else {
               this.win();
@@ -441,10 +466,13 @@
           alert("You died.\r\n\r\nFinal Score: " + this.score);
           this.stop();
       }
+      //Prüfe ob kopf außerhalb des Canvas
       isOutside(pixel) {
           const { nbPixelX: nbCellsX, nbPixelY: nbCellsY } = this.setting;
+          // links aus dem Spiel raus / rechts aus dem Spiel raus / oben aus dem speiel Raus / unten aus dem Spiel raus
           return pixel.x < 0 || pixel.x >= nbCellsX || pixel.y < 0 || pixel.y >= nbCellsY;
       }
+      //Prüfe welche Pfeiltaste gedrückt wurde
       onKeyDown(event) {
           switch (event.key) {
               case 'ArrowUp':
@@ -465,35 +493,13 @@
                   break;
           }
       }
-      onTouchStart(e) {
-          this.touch = e.changedTouches[0];
-          e.preventDefault();
-      }
-      onTouchMove(e) {
-          e.preventDefault();
-      }
-      onTouchEnd(e) {
-          const touch = e.changedTouches[0];
-          const distX = touch.pageX - this.touch.pageX;
-          const distY = touch.pageY - this.touch.pageY;
-          let direction = "";
-          if (Math.abs(distX) >= 100) {
-              direction = (distX < 0) ? 'Left' : 'Right';
-          }
-          else if (Math.abs(distY) >= 100) {
-              direction = (distY < 0) ? 'Up' : 'Down';
-          }
-          if (direction) {
-              this.snake.setDirection(direction);
-          }
-          e.preventDefault();
-      }
   }
 
   //this is the mode classic
   class Classic extends Game {
       constructor() {
           super();
+          this.playground = new Playground(this, false);
       }
       display(time) {
           const { width, height, color, level } = this.setting;
@@ -538,6 +544,7 @@
   class OnSpecial extends Game {
       constructor() {
           super();
+          this.playground = new Playground(this, true);
       }
       display(time) {
           const { width, height, color, level } = this.setting;
