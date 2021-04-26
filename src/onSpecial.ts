@@ -1,4 +1,4 @@
-//this is the mode ON20-Special
+//Das ist der Modus ON20 Special
 
 import { Game } from "./game";
 import { SCALE, bricksSpecial, Pixel } from "./constants";

@@ -1,4 +1,4 @@
-// this is the snake
+// Das ist die Schlange
 
 import { PIXELSIZE, Direction, SCALE, Pixel } from "./constants";
 import { Game } from "./game";

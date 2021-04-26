@@ -1,4 +1,4 @@
-//this are the constants
+// Das sind die Konstanten
 
 export const WIDTH = 60; // Anzahl der Quadrate vertikal
 export const HEIGHT = 35; // Anzahl der Quadrate horizontal

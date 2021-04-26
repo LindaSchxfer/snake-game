@@ -1,4 +1,4 @@
-// Das ist die Game Logik
+// Das ist die Spiel Logik
 
 import { PIXELSIZE, COLORS, Settings as Setting, HEIGHT, MAX_LEVEL, SCALE, SPEED, WIDTH, Pixel} from "./constants";
 import { Playground as Playground } from "./playground";

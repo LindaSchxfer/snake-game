@@ -1,4 +1,4 @@
-//this is the mode classic
+// Das ist der Modus Klassik
 
 import { SCALE } from "./constants";
 import { Game } from "./game";

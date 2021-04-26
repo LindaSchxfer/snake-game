@@ -1,4 +1,4 @@
-// this is the playground
+// Das ist die Spielfläche
 
 import { bricksSpecial, KIWI, SCALE, Pixel } from "./constants";
 import { Game } from "./game";

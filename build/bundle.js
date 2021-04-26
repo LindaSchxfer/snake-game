@@ -1,15 +1,15 @@
 (function () {
   'use strict';
 
-  //this are the constants
-  const WIDTH = 60; // number of squares vertical
-  const HEIGHT = 35; // number of squares horizontal
-  const PIXELSIZE = 20; // size of one square
-  const SCALE = 2.0; // draw everything twice as big and make it smaller to get clean lines even on a retina screen
-  const SPEED = 150; // initial speed
-  const MAX_LEVEL = 10;
-  const KIWI = 1;
-  // level background colors
+  // Das sind die Konstanten
+  const WIDTH = 60; // Anzahl der Quadrate vertikal
+  const HEIGHT = 35; // Anzahl der Quadrate horizontal
+  const PIXELSIZE = 20; // Größe eines Quadrats
+  const SCALE = 2.0; // alles doppelt so groß zeichnen und kleiner machen
+  const SPEED = 150; // Anfangsgeschwindigkeit
+  const MAX_LEVEL = 10; // Höchstlevel
+  const KIWI = 1; // Anzahl der Kiwis im ersten Level
+  // Level Hintergrundfarben
   const COLORS = [
       "#fafafa",
       "#ffffcc",
@@ -28,7 +28,7 @@
           this.y = y;
       }
   }
-  // ls: Move directions (changed type to enum)
+  // ls: Bewegungsrichtungen der Schlange (Typ auf Enum geändert)
   var Direction;
   (function (Direction) {
       Direction[Direction["Up"] = 0] = "Up";
@@ -37,9 +37,9 @@
       Direction[Direction["Down"] = 3] = "Down";
       Direction[Direction["null"] = 4] = "null";
   })(Direction || (Direction = {}));
-  // ls: ON20 Special build the ON20 Bricks Array
+  // ls: ON20 Special baut das ON20 Wände Array
   const bricksSpecial = [
-      //row 1
+      // Reihe 1
       { "x": 10, "y": 13 },
       { "x": 11, "y": 13 },
       { "x": 14, "y": 13 },
@@ -55,7 +55,7 @@
       { "x": 45, "y": 13 },
       { "x": 48, "y": 13 },
       { "x": 49, "y": 13 },
-      //row 2
+      // Reihe 2
       { "x": 9, "y": 14 },
       { "x": 16, "y": 14 },
       { "x": 19, "y": 14 },
@@ -65,7 +65,7 @@
       { "x": 40, "y": 14 },
       { "x": 43, "y": 14 },
       { "x": 50, "y": 14 },
-      //row 3
+      // Reihe 3
       { "x": 9, "y": 15 },
       { "x": 16, "y": 15 },
       { "x": 19, "y": 15 },
@@ -75,7 +75,7 @@
       { "x": 40, "y": 15 },
       { "x": 43, "y": 15 },
       { "x": 50, "y": 15 },
-      //row 4
+      // Reihe 4
       { "x": 9, "y": 16 },
       { "x": 16, "y": 16 },
       { "x": 19, "y": 16 },
@@ -84,7 +84,7 @@
       { "x": 39, "y": 16 },
       { "x": 43, "y": 16 },
       { "x": 50, "y": 16 },
-      //row 5
+      // Reihe 5
       { "x": 9, "y": 19 },
       { "x": 16, "y": 19 },
       { "x": 19, "y": 19 },
@@ -93,7 +93,7 @@
       { "x": 36, "y": 19 },
       { "x": 43, "y": 19 },
       { "x": 50, "y": 19 },
-      //row 6
+      // Reihe 6
       { "x": 9, "y": 20 },
       { "x": 16, "y": 20 },
       { "x": 19, "y": 20 },
@@ -103,7 +103,7 @@
       { "x": 35, "y": 20 },
       { "x": 43, "y": 20 },
       { "x": 50, "y": 20 },
-      //row 7
+      // Reihe 7
       { "x": 9, "y": 21 },
       { "x": 16, "y": 21 },
       { "x": 19, "y": 21 },
@@ -113,7 +113,7 @@
       { "x": 35, "y": 21 },
       { "x": 43, "y": 21 },
       { "x": 50, "y": 21 },
-      //row 8
+      // Reihe 8
       { "x": 10, "y": 22 },
       { "x": 11, "y": 22 },
       { "x": 14, "y": 22 },
@@ -133,7 +133,7 @@
       { "x": 49, "y": 22 }
   ];
 
-  // this is the playground
+  // Das ist die Spielfläche
   class Playground {
       constructor(game, specialMode) {
           this.game = game;
@@ -141,24 +141,25 @@
           this.scatter();
           this.specialMode = specialMode;
       }
-      //Kiwis werden verstreut
+      // Kiwis werden zufällig verstreut
       scatter() {
           const { nbPixelX: nbCellsX, nbPixelY: nbCellsY, level } = this.game.getSettings();
           const nbKiwi = KIWI * (level + 1);
           for (let count = 0; count < nbKiwi; count++) {
+              // ls: so lange condition true wird die While Schleife ausgeführt 
               let condition = true;
+              // ls: While Schleife für den Fall dass Kiwis unter den ON20 Wänden ausgegeben werden sollten
               while (condition === true) {
                   let x = Math.floor(Math.random() * nbCellsX);
                   let y = Math.floor(Math.random() * nbCellsY);
-                  //Prüfe falls special mode aktiv ist, wenn ja keine Kiwie innserhalb der Bricks
+                  // ls: Prüfe falls specialMode aktiv ist, wenn ja dürfen keine Kiwis unter den Wänden liegen
                   if (this.specialMode === true) {
-                      console.log("specialMode");
-                      //Prüfe ob die random ausgewählte Kiwi innerhalb der bricks liegt
+                      //Prüfe ob die zufällig verstreuten Kiwis unter einer Wand liegen
                       if (bricksSpecial.find(el => x == el.x && y == el.y) == undefined) {
                           this.kiwi.push(new Pixel(x, y));
                           condition = false;
                       }
-                      //normale mode muss dies nicht prüfen
+                      // ls: Normaler Modus kann die Kiwis überall auf dem Playground verteilen
                   }
                   else {
                       this.kiwi.push(new Pixel(x, y));
@@ -167,7 +168,7 @@
               }
           }
       }
-      //das Canvas wird aufgespannt
+      // das Canvas wird aufgespannt
       draw(time, context) {
           const { width, height, pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
           context.fillStyle = "black";
@@ -184,11 +185,11 @@
               context.lineTo(width, y);
               context.stroke();
           }
-          // kiwi aussehen
+          // Kiwi aussehen
           context.fillStyle = "#03DAC5";
-          this.kiwi.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight)); //ändere Farbe der Celle (x und y wert) die eine Kiwi ist
+          this.kiwi.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight)); //ändere Farbe der Zelle (x und y Wert) welche eine Kiwi ist
       }
-      //Prüfe ob die Zelle eine Kiwi ist
+      // Prüfe ob die Zelle eine Kiwi ist
       isKiwi(cell) {
           return this.kiwi.find(el => cell.x == el.x && cell.y == el.y);
       }
@@ -196,13 +197,13 @@
       eatKiwi(pixel) {
           this.kiwi = this.kiwi.filter(el => pixel.x != el.x || pixel.y != el.y);
       }
-      //schauen ob alle Kiwis des Level gefressen sind
+      // prüfen, ob alle Kiwis des Levels gefressen wurden
       isDone() {
           return this.kiwi.length == 0;
       }
   }
 
-  // this is the snake
+  // Das ist die Schlange
   class Snake {
       constructor(game) {
           this.ORIGINAL_SIZE = 3;
@@ -211,12 +212,12 @@
           this.game = game;
           this.size = this.ORIGINAL_SIZE;
           this.snakeDirection = [this.ORIGINAL_DIRECTION];
-          // original head
+          // Ursprünglicher Kopf der Schlange
           this.snakeHead = new Pixel(this.ORIGINAL_POSITION.x, this.ORIGINAL_POSITION.y);
-          // original tail
+          // Ursprünglicher Schwanz der Schlange
           this.snakeTail = [];
       }
-      //Welche richtung
+      // Welche Richtung?
       setDirection(direction) {
           const lastDirection = this.snakeDirection[this.snakeDirection.length - 1];
           if (lastDirection == "Up" && (direction == "Down" || direction == "Up")) {
@@ -233,18 +234,18 @@
           }
           this.snakeDirection.push(direction);
       }
-      //bewegung der Schlange 
+      // Bewegung der Schlange 
       move() {
-          // add current head to tail
+          // aktuellen Kopf zum Schwanz hinzufügen
           this.snakeTail.push(this.snakeHead);
-          // get next position
+          // nächste Position ermitteln
           this.snakeHead = this.getNext();
-          // fix the snake size wenn kopf weter ein stüch schwanz weg
+          // Wenn der Kopf eins weiter rückt muss ein Stück vom Schwanz weggenommen werden
           if (this.snakeTail.length > this.size) {
               this.snakeTail.splice(0, 1);
           }
       }
-      //ermittelt abhängig von der Richtung die x und y werte des neuen kopfes
+      // ermittelt abhängig von der Richtung die x und y Werte des neuen Kopfes
       getNext() {
           const direction = this.snakeDirection.length > 1 ? this.snakeDirection.splice(0, 1)[0] : this.snakeDirection[0];
           switch (direction) {
@@ -259,17 +260,17 @@
           }
           return new Pixel(0, 0);
       }
-      //Schlange wird gezeichnet
+      // Schlange wird gezeichnet
       draw(time, context) {
           const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
-          // head
+          // Kopf
           const size = PIXELSIZE * SCALE / 10;
           const offset = PIXELSIZE * SCALE / 3;
           const x = cellWidth * this.snakeHead.x;
           const y = cellHeight * this.snakeHead.y;
           context.fillStyle = "#6200EE";
           context.fillRect(x, y, cellWidth, cellHeight);
-          // eyes
+          // Augen
           switch (this.snakeDirection[0]) {
               case "Up":
                   context.beginPath();
@@ -300,46 +301,49 @@
                   context.fill();
                   break;
           }
-          // tail
+          // Schwanz
           context.fillStyle = "#BB86FC";
           this.snakeTail.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
       }
-      //Schlange wird verlängert
+      // Schlange wird verlängert
       lengthen(qty = 3) {
           this.size += qty;
       }
-      //gebe x und y wert des kopfes zurück
+      // gebe x und y Wert des Kopfes zurück
       getSnakeHead() {
           return this.snakeHead;
       }
-      //für die selbstfressfunktion ist schwanz und kopf gleich?
+      // trifft der Kopf auf ein Stück vom Schwanz?
       isSnake(pixel) {
           return this.snakeTail.find(el => pixel.x == el.x && pixel.y == el.y);
       }
   }
 
-  //this is the main game logic
+  // Das ist die Spiel Logik
   class Game {
       constructor() {
           this.score = 0;
           this.controlFunction = false;
           this.nextMove = 0;
+          //Div angelegt
           this.div = document.createElement("div");
+          this.div.setAttribute("id", "playground");
+          //Canvas angelegt
           this.canvas = document.createElement('Canvas');
           this.div.appendChild(this.canvas);
+          //Exit Button angelegt
           this.buttonExit = document.createElement("button");
-          this.buttonExit.onclick = this.stopOnButton.bind(this);
+          this.buttonExit.onclick = this.exit.bind(this);
           this.buttonExit.innerText = "Exit";
           this.buttonExit.setAttribute("class", "exitdesign");
           this.div.appendChild(this.buttonExit);
-          this.div.setAttribute("id", "playground");
-          // canvas element size in the page
+          // Größe des Canvas-Elements auf der Seite
           this.canvas.style.width = WIDTH * PIXELSIZE + 'px';
           this.canvas.style.height = HEIGHT * PIXELSIZE + 'px';
-          // image buffer size 
+          // Bildpuffergröße
           this.canvas.width = WIDTH * PIXELSIZE * SCALE;
           this.canvas.height = HEIGHT * PIXELSIZE * SCALE;
-          // configuration
+          // Konfiguration
           this.setting = {
               level: 0,
               speed: SPEED,
@@ -353,24 +357,26 @@
           };
           this.snake = new Snake(this);
           this.playground = new Playground(this, false);
-          // event listeners
+          // sobald eine Pfeiltaste gedrückt wird die onKeyDown Funktion aufgerufen
           window.addEventListener('keydown', this.onKeyDown.bind(this), false);
           document.body.appendChild(this.div);
       }
+      //Spiel starten
       start() {
           this.nextMove = 0;
           this.controlFunction = true;
           requestAnimationFrame(this.loop.bind(this));
       }
+      //Spiel stoppen
       stop() {
           this.controlFunction = false;
       }
-      //ls: Stoppt das Spiel ON20 Special mit dem Button Exit
-      stopOnButton() {
+      // ls: Stoppt das Spiel mit dem Button Exit
+      exit() {
           this.stop();
           this.div.remove();
           const wrapper = document.getElementById("wrapper");
-          //ls: zuvor versteckter wrapper soll wieder erscheinen um erneut eine Auswahl zu treffen
+          // ls: zuvor versteckter wrapper soll wieder erscheinen um erneut eine Auswahl zu treffen
           if (wrapper != null) {
               wrapper.style.display = "block";
           }
@@ -379,15 +385,17 @@
           return this.setting;
       }
       loop(time) {
+          //stopp falls controlFunction gleich false
           if (this.controlFunction) {
+              //rekursion (Funktion ruft sich immer wieder selbst auf)
               requestAnimationFrame(this.loop.bind(this));
-              //prüfe ob Zeit ist  für nächster spielzug
+              //prüfe ob es Zeit für den nächsten Schlangenschritt ist
               if (time >= this.nextMove) {
-                  //Zeitpunkt für den nächsten spielzug setzte
+                  //Zeitpunkt für den nächsten Spielzug setzten
                   this.nextMove = time + this.setting.speed;
-                  // move once  schlange bewegen
+                  // Schlange einmal bewegen
                   this.snake.move();
-                  // prüfe ob spiel zu ende / level up / oder normal weiter 
+                  // prüfe ob Spiel zu ende / level up / oder normal weiter 
                   switch (this.checkCondition()) {
                       case -1:
                           this.die();
@@ -406,52 +414,52 @@
               }
           }
       }
-      //Aktualisiert das Canvas 
+      // Aktualisiert das Canvas 
       display(time) {
           const { width, height, color, level } = this.setting;
           const context = this.canvas.getContext("2d");
-          // background
+          // Hintergrundfarbe
           context.fillStyle = color;
           context.fillRect(0, 0, width, height);
-          // level
+          // Level
           context.font = height + "px Roboto Condensed";
           context.textBaseline = "middle";
           context.textAlign = "center";
           context.fillStyle = "rgba(0,0,0,0.1)";
           context.fillText(String(level + 1), width / 2, height / 2);
-          // score
+          // Punkzahl
           context.font = 35 * SCALE + "px Roboto Condensed";
           context.textAlign = "left";
           context.textBaseline = "top";
           context.fillStyle = "rgba(0,0,0,0.25)";
           context.fillText(String(this.score), 10 * SCALE, 10 * SCALE);
-          // playground
+          // Spielfeld
           this.playground.draw(time, context);
-          // snake neu gezeichnet
+          // Schlange neu gezeichnet
           this.snake.draw(time, context);
       }
       checkCondition() {
-          //position des Kopfes der Schlange
+          // Position des Kopfes der Schlange
           const cell = this.snake.getSnakeHead();
-          // left the play area or ate itself?? 
+          // lden Spielbereich verlassen oder sich selbst gefressen?
           if (this.isOutside(cell) || this.snake.isSnake(cell)) {
-              // dead
+              // Tod
               return -1;
           }
-          // ate kiwi?
+          // eine Kiwi gegessen?
           if (this.playground.isKiwi(cell)) {
               return 1;
           }
-          // nothing special
+          // nichts Besonderes
           return 0;
       }
-      //alle Kiwis der Runde sind gegessen
+      // alle Kiwis der Runde sind gegessen
       levelUp() {
           this.score += 1000;
           this.setting.level++;
           if (this.setting.level < MAX_LEVEL) {
-              this.setting.speed -= 7; //spiel verschnellern
-              this.setting.color = COLORS[this.setting.level]; //Hntergrundfarbe ändern
+              this.setting.speed -= 7; //Spiel verschnellern
+              this.setting.color = COLORS[this.setting.level]; //Hintergrundfarbe ändern
               this.playground.scatter(); //Kiwis verstreuen
           }
           else {
@@ -466,13 +474,13 @@
           alert("You died.\r\n\r\nFinal Score: " + this.score);
           this.stop();
       }
-      //Prüfe ob kopf außerhalb des Canvas
+      // Prüfe ob Kopf der Schlange außerhalb des Canvas
       isOutside(pixel) {
           const { nbPixelX: nbCellsX, nbPixelY: nbCellsY } = this.setting;
-          // links aus dem Spiel raus / rechts aus dem Spiel raus / oben aus dem speiel Raus / unten aus dem Spiel raus
+          // links aus dem Spiel raus / rechts aus dem Spiel raus / oben aus dem Spiel Raus / unten aus dem Spiel raus
           return pixel.x < 0 || pixel.x >= nbCellsX || pixel.y < 0 || pixel.y >= nbCellsY;
       }
-      //Prüfe welche Pfeiltaste gedrückt wurde
+      // Prüfe welche Pfeiltaste gedrückt wurde
       onKeyDown(event) {
           switch (event.key) {
               case 'ArrowUp':
@@ -495,116 +503,123 @@
       }
   }
 
-  //this is the mode classic
+  // Das ist der Modus Klassik
   class Classic extends Game {
       constructor() {
           super();
+          // ls: liefert für den specialMode in playground.ts false
           this.playground = new Playground(this, false);
       }
       display(time) {
           const { width, height, color, level } = this.setting;
           const context = this.canvas.getContext("2d");
-          // background
+          // Hintergrund
           context.fillStyle = color;
           context.fillRect(0, 0, width, height);
-          // level
+          // Level
           context.font = height + "px Roboto Condensed";
           context.textBaseline = "middle";
           context.textAlign = "center";
           context.fillStyle = "rgba(0,0,0,0.1)";
           context.fillText(String(level + 1), width / 2, height / 2);
-          // score
+          // Punktzahl
           context.font = 35 * SCALE + "px Roboto Condensed";
           context.textAlign = "left";
           context.textBaseline = "top";
           context.fillStyle = "rgba(0,0,0,0.25)";
           context.fillText(String(this.score), 10 * SCALE, 10 * SCALE);
-          // playground
+          // Spielfeld
           this.playground.draw(time, context);
-          // snake
+          // Schlange neu gezeichnet
           this.snake.draw(time, context);
       }
       checkCondition() {
           const cell = this.snake.getSnakeHead();
-          // left the playground or ate itself?
+          // Das Spielfeld verlassen? Sich selbst gefressen?
           if (this.isOutside(cell) || this.snake.isSnake(cell)) {
-              // dead
+              // Tod
               return -1;
           }
-          // ate kiwi?
+          // Kiwi gefressen?
           if (this.playground.isKiwi(cell)) {
               return 1;
           }
-          // nothing special
+          // nichts Besonderes
           return 0;
       }
   }
 
-  //this is the mode ON20-Special
+  //Das ist der Modus ON20 Special
   class OnSpecial extends Game {
       constructor() {
           super();
+          // ls: liefert für den specialMode in playground.ts true
           this.playground = new Playground(this, true);
       }
       display(time) {
           const { width, height, color, level } = this.setting;
           const context = this.canvas.getContext("2d");
-          // background
+          // Hintergrund
           context.fillStyle = color;
           context.fillRect(0, 0, width, height);
-          // level
+          // Level
           context.font = height + "px Roboto Condensed";
           context.textBaseline = "middle";
           context.textAlign = "center";
           context.fillStyle = "rgba(0,0,0,0.1)";
           context.fillText(String(level + 1), width / 2, height / 2);
-          // score
+          // Punkzahl
           context.font = 35 * SCALE + "px Roboto Condensed";
           context.textAlign = "left";
           context.textBaseline = "top";
           context.fillStyle = "rgba(0,0,0,0.25)";
           context.fillText(String(this.score), 10 * SCALE, 10 * SCALE);
-          // playground
+          // Spielfeld
           this.playground.draw(time, context);
-          //ls: ON20 Special 
+          //ls: ON20 Special Wände werden im Spielfeld angezeigt
           const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.setting;
           context.fillStyle = "rgb(52,52,52)";
           bricksSpecial.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
-          // snake
+          // Schlange neu gezeichnet
           this.snake.draw(time, context);
       }
       checkCondition() {
           const cell = this.snake.getSnakeHead();
-          // left the playground or ate itself? 
+          // Das Spielfeld verlassen? Sich selbst gefressen? In die ON20 Wände gekracht?
           if (this.isOutside(cell) || this.snake.isSnake(cell) || this.crashedInBricks(cell)) {
-              // dead
+              // Tod
               return -1;
           }
-          // ate kiwi?
+          // Kiwi gegessen?
           if (this.playground.isKiwi(cell)) {
               return 1;
           }
-          // nothing special
+          // nichts Besonderes
           return 0;
       }
-      // ls: On20 Special function: if Snake crashed in Bricks? --> true
+      // ls: Wenn Schlange in ON20 Wände kracht liefert diese Funktion true
       crashedInBricks(pixel) {
           return bricksSpecial.find(el => pixel.x == el.x && pixel.y == el.y);
       }
   }
 
-  //this is the main locic
+  // Das ist die Haupt Logik
+  // Anzeigen des Menüs zur Spielmodiauswahl
   class MainMenu {
       constructor() {
+          // Div erstellen um später Menü auszublenden
           this.wrapper = document.createElement("div");
           this.wrapper.setAttribute("id", "wrapper");
           this.wrapper.setAttribute("class", "modiauswahl");
+          // Button zum starten des Spielmodus Classic auf onclick event
           this.buttonClassic = document.createElement("button");
           this.buttonClassic.onclick = this.startClassic;
           this.buttonClassic.innerHTML = "Classic";
+          // Button zum starten des Spielmodus OnSpecial auf onclick event
           this.buttonSpecial = document.createElement("button");
           this.buttonSpecial.onclick = this.startSpecial;
           this.buttonSpecial.innerHTML = "ON20 Special";
+          // Buttons dem Div als Kindelement hinzufügen
           this.wrapper.appendChild(this.buttonClassic);
           this.wrapper.appendChild(this.buttonSpecial);
           document.body.appendChild(this.wrapper);
