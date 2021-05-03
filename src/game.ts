@@ -7,15 +7,15 @@ import { Snake } from "./snake";
 export class Game {
 
   public canvas: HTMLCanvasElement;
-  public div: HTMLDivElement;
-  public buttonExit: HTMLButtonElement;
+  private div: HTMLDivElement;
+  private buttonExit: HTMLButtonElement;
 
   public score:number = 0;
-  public controlFunction: boolean = false;
+  private controlFunction: boolean = false;
   public playground: Playground;
   public snake: Snake;
   public setting: Setting;  
-  public nextMove:number = 0;
+  private nextMove:number = 0;
    
  
   constructor() {

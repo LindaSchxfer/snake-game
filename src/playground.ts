@@ -25,7 +25,7 @@ export class Playground {
             let condition = true;
 
             // ls: While Schleife für den Fall dass Kiwis unter den ON20 Wänden ausgegeben werden sollten
-            while(condition === true){
+            while(condition){
                 let x = Math.floor(Math.random() * nbCellsX);
                 let y = Math.floor(Math.random() * nbCellsY); 
 

@@ -31,11 +31,10 @@
   // ls: Bewegungsrichtungen der Schlange (Typ auf Enum geändert)
   var Direction;
   (function (Direction) {
-      Direction[Direction["Up"] = 0] = "Up";
-      Direction[Direction["Right"] = 1] = "Right";
-      Direction[Direction["Left"] = 2] = "Left";
-      Direction[Direction["Down"] = 3] = "Down";
-      Direction[Direction["null"] = 4] = "null";
+      Direction["UP"] = "Up";
+      Direction["RIGHT"] = "Right";
+      Direction["LEFT"] = "Left";
+      Direction["DOWN"] = "Down";
   })(Direction || (Direction = {}));
   // ls: ON20 Special baut das ON20 Wände Array
   const bricksSpecial = [
@@ -149,7 +148,7 @@
               // ls: so lange condition true wird die While Schleife ausgeführt 
               let condition = true;
               // ls: While Schleife für den Fall dass Kiwis unter den ON20 Wänden ausgegeben werden sollten
-              while (condition === true) {
+              while (condition) {
                   let x = Math.floor(Math.random() * nbCellsX);
                   let y = Math.floor(Math.random() * nbCellsY);
                   // ls: Prüfe falls specialMode aktiv ist, wenn ja dürfen keine Kiwis unter den Wänden liegen
@@ -249,13 +248,13 @@
       getNext() {
           const direction = this.snakeDirection.length > 1 ? this.snakeDirection.splice(0, 1)[0] : this.snakeDirection[0];
           switch (direction) {
-              case "Up":
+              case Direction.UP:
                   return new Pixel(this.snakeHead.x, this.snakeHead.y - 1);
-              case "Right":
+              case Direction.RIGHT:
                   return new Pixel(this.snakeHead.x + 1, this.snakeHead.y);
-              case "Down":
+              case Direction.DOWN:
                   return new Pixel(this.snakeHead.x, this.snakeHead.y + 1);
-              case "Left":
+              case Direction.LEFT:
                   return new Pixel(this.snakeHead.x - 1, this.snakeHead.y);
           }
           return new Pixel(0, 0);

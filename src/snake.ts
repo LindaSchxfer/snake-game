@@ -65,14 +65,15 @@ export class Snake {
     getNext():Pixel {
         const direction = this.snakeDirection.length > 1 ? this.snakeDirection.splice(0,1)[0] : this.snakeDirection[0];
         switch (direction) {
-            case "Up":
+                
+            case Direction.UP:
                 return new Pixel(this.snakeHead.x, this.snakeHead.y - 1);
-            case "Right":
-                return new Pixel(this.snakeHead.x+1, this.snakeHead.y);
-            case "Down":
+            case Direction.RIGHT:
+                return new Pixel(this.snakeHead.x + 1, this.snakeHead.y);
+            case Direction.DOWN:
                 return new Pixel(this.snakeHead.x, this.snakeHead.y + 1);
-            case "Left":
-                return new Pixel(this.snakeHead.x-1, this.snakeHead.y);
+            case Direction.LEFT:
+                return new Pixel(this.snakeHead.x - 1, this.snakeHead.y);
         }
         return new Pixel(0,0);
     }

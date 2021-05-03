@@ -46,7 +46,7 @@ export class Pixel {
 }
 
 // ls: Bewegungsrichtungen der Schlange (Typ auf Enum geändert)
-export enum Direction { "Up" , "Right" , "Left" , "Down" , null }
+export enum Direction { UP= "Up" , RIGHT = "Right" , LEFT = "Left" , DOWN = "Down" }
 
 // ls: ON20 Special baut das ON20 Wände Array
 export const bricksSpecial = [

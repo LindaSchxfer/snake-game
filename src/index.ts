@@ -6,9 +6,9 @@ import { OnSpecial } from "./onSpecial";
 // Anzeigen des Menüs zur Spielmodiauswahl
 class MainMenu{
 
-  public wrapper: HTMLDivElement;
-  public buttonClassic: HTMLButtonElement;
-  public buttonSpecial: HTMLButtonElement;
+  private wrapper: HTMLDivElement;
+  private buttonClassic: HTMLButtonElement;
+  private buttonSpecial: HTMLButtonElement;
 
   constructor(){
 
