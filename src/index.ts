@@ -1,7 +1,9 @@
 // Das ist die Haupt Logik
 
 import {Classic} from "./classic";
-import { OnSpecial } from "./onSpecial";
+import { Interchanged } from "./interchanged";
+import {OnSpecial} from "./onSpecial";
+
 
 // Anzeigen des Menüs zur Spielmodiauswahl
 class MainMenu{
@@ -9,6 +11,7 @@ class MainMenu{
   private wrapper: HTMLDivElement;
   private buttonClassic: HTMLButtonElement;
   private buttonSpecial: HTMLButtonElement;
+  private buttonInterchanged: HTMLButtonElement;
 
   constructor(){
 
@@ -27,9 +30,15 @@ class MainMenu{
     this.buttonSpecial.onclick = this.startSpecial;
     this.buttonSpecial.innerHTML = "ON20 Special";
 
+    // Button zum starten des Spielmodus Interchanged auf onclick event
+    this.buttonInterchanged = document.createElement("button");
+    this.buttonInterchanged.onclick = this.startInterchanged;
+    this.buttonInterchanged.innerHTML = "Interchanged";
+
     // Buttons dem Div als Kindelement hinzufügen
     this.wrapper.appendChild(this.buttonClassic);
     this.wrapper.appendChild(this.buttonSpecial);
+    this.wrapper.appendChild(this.buttonInterchanged);
     document.body.appendChild(this.wrapper);
   }
 
@@ -51,6 +60,15 @@ class MainMenu{
       wrapper.style.display = "none";
       }    
     onSpecial.start();
+  }
+
+  startInterchanged() {
+    const interchanged = new Interchanged();    
+    const wrapper = document.getElementById("wrapper");
+      if(wrapper != null){
+      wrapper.style.display = "none";
+      }    
+    interchanged.start();
   }
 }
 

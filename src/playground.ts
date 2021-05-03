@@ -33,7 +33,7 @@ export class Playground {
                 if(this.specialMode === true){
 
                     //Prüfe ob die zufällig verstreuten Kiwis unter einer Wand liegen
-                    if(bricksSpecial.find(el => x == el.x && y == el.y) == undefined){
+                    if(bricksSpecial.find(el => x == el.x && y == el.y) == undefined) {
                         this.kiwi.push(new Pixel(x, y));
                         condition = false;
                     }
@@ -47,7 +47,7 @@ export class Playground {
     }
 
     // das Canvas wird aufgespannt
-    draw(time:number, context:CanvasRenderingContext2D) {
+    draw(context:CanvasRenderingContext2D) {
 
         const { width, height, pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
 

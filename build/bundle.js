@@ -168,7 +168,7 @@
           }
       }
       // das Canvas wird aufgespannt
-      draw(time, context) {
+      draw(context) {
           const { width, height, pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
           context.fillStyle = "black";
           context.lineWidth = 1 * SCALE;
@@ -206,7 +206,7 @@
   class Snake {
       constructor(game) {
           this.ORIGINAL_SIZE = 3;
-          this.ORIGINAL_DIRECTION = "Right";
+          this.ORIGINAL_DIRECTION = Direction.RIGHT;
           this.ORIGINAL_POSITION = { x: 1, y: 1 };
           this.game = game;
           this.size = this.ORIGINAL_SIZE;
@@ -219,16 +219,16 @@
       // Welche Richtung?
       setDirection(direction) {
           const lastDirection = this.snakeDirection[this.snakeDirection.length - 1];
-          if (lastDirection == "Up" && (direction == "Down" || direction == "Up")) {
+          if (lastDirection == Direction.UP && (direction == Direction.DOWN || direction == Direction.UP)) {
               return;
           }
-          if (lastDirection == "Down" && (direction == "Up" || direction == "Down")) {
+          if (lastDirection == Direction.DOWN && (direction == Direction.UP || direction == Direction.DOWN)) {
               return;
           }
-          if (lastDirection == "Left" && (direction == "Right" || direction == "Left")) {
+          if (lastDirection == Direction.LEFT && (direction == Direction.RIGHT || direction == Direction.LEFT)) {
               return;
           }
-          if (lastDirection == "Right" && (direction == "Left" || direction == "Right")) {
+          if (lastDirection == Direction.RIGHT && (direction == Direction.LEFT || direction == Direction.RIGHT)) {
               return;
           }
           this.snakeDirection.push(direction);
@@ -260,7 +260,7 @@
           return new Pixel(0, 0);
       }
       // Schlange wird gezeichnet
-      draw(time, context) {
+      draw(context) {
           const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
           // Kopf
           const size = PIXELSIZE * SCALE / 10;
@@ -271,28 +271,28 @@
           context.fillRect(x, y, cellWidth, cellHeight);
           // Augen
           switch (this.snakeDirection[0]) {
-              case "Up":
+              case Direction.UP:
                   context.beginPath();
                   context.arc(x + offset, y + offset, size, 0, 2 * Math.PI, false);
                   context.arc(x + 2 * offset, y + offset, size, 0, 2 * Math.PI, false);
                   context.fillStyle = "white";
                   context.fill();
                   break;
-              case "Down":
+              case Direction.DOWN:
                   context.beginPath();
                   context.arc(x + offset, y + 2 * offset, size, 0, 2 * Math.PI, false);
                   context.arc(x + 2 * offset, y + 2 * offset, size, 0, 2 * Math.PI, false);
                   context.fillStyle = "white";
                   context.fill();
                   break;
-              case "Right":
+              case Direction.RIGHT:
                   context.beginPath();
                   context.arc(x + 2 * offset, y + offset, size, 0, 2 * Math.PI, false);
                   context.arc(x + 2 * offset, y + 2 * offset, size, 0, 2 * Math.PI, false);
-                  context.fillStyle = 'white';
+                  context.fillStyle = "white";
                   context.fill();
                   break;
-              case "Left":
+              case Direction.LEFT:
                   context.beginPath();
                   context.arc(x + offset, y + offset, size, 0, 2 * Math.PI, false);
                   context.arc(x + offset, y + 2 * offset, size, 0, 2 * Math.PI, false);
@@ -324,13 +324,13 @@
           this.score = 0;
           this.controlFunction = false;
           this.nextMove = 0;
-          //Div angelegt
+          // Div angelegt
           this.div = document.createElement("div");
           this.div.setAttribute("id", "playground");
-          //Canvas angelegt
-          this.canvas = document.createElement('Canvas');
+          // Canvas angelegt
+          this.canvas = document.createElement("Canvas");
           this.div.appendChild(this.canvas);
-          //Exit Button angelegt
+          // ls: Exit Button angelegt
           this.buttonExit = document.createElement("button");
           this.buttonExit.onclick = this.exit.bind(this);
           this.buttonExit.innerText = "Exit";
@@ -357,16 +357,16 @@
           this.snake = new Snake(this);
           this.playground = new Playground(this, false);
           // sobald eine Pfeiltaste gedrückt wird die onKeyDown Funktion aufgerufen
-          window.addEventListener('keydown', this.onKeyDown.bind(this), false);
+          window.addEventListener("keydown", this.onKeyDown.bind(this), false);
           document.body.appendChild(this.div);
       }
-      //Spiel starten
+      // Spiel starten
       start() {
           this.nextMove = 0;
           this.controlFunction = true;
           requestAnimationFrame(this.loop.bind(this));
       }
-      //Spiel stoppen
+      // Spiel stoppen
       stop() {
           this.controlFunction = false;
       }
@@ -384,13 +384,13 @@
           return this.setting;
       }
       loop(time) {
-          //stopp falls controlFunction gleich false
+          // stopp falls controlFunction gleich false
           if (this.controlFunction) {
-              //rekursion (Funktion ruft sich immer wieder selbst auf)
+              // rekursion (Funktion ruft sich immer wieder selbst auf)
               requestAnimationFrame(this.loop.bind(this));
-              //prüfe ob es Zeit für den nächsten Schlangenschritt ist
+              // prüfe ob es Zeit für den nächsten Schlangenschritt ist
               if (time >= this.nextMove) {
-                  //Zeitpunkt für den nächsten Spielzug setzten
+                  // Zeitpunkt für den nächsten Spielzug setzten
                   this.nextMove = time + this.setting.speed;
                   // Schlange einmal bewegen
                   this.snake.move();
@@ -408,49 +408,70 @@
                           }
                       default:
                           // update display
-                          this.display(time);
+                          const { width, height, color, level } = this.setting;
+                          const context = this.canvas.getContext("2d");
+                          this.displayBackground(context, color, width, height);
+                          this.displayLevel(context, width, height, level);
+                          this.displayScore(context);
+                          this.displayPlayground(context);
+                          this.displaySnake(context);
                   }
               }
           }
       }
-      // Aktualisiert das Canvas 
-      display(time) {
-          const { width, height, color, level } = this.setting;
-          const context = this.canvas.getContext("2d");
+      displayBackground(context, color, width, height) {
           // Hintergrundfarbe
           context.fillStyle = color;
           context.fillRect(0, 0, width, height);
+      }
+      displayLevel(context, width, height, level) {
           // Level
           context.font = height + "px Roboto Condensed";
           context.textBaseline = "middle";
           context.textAlign = "center";
           context.fillStyle = "rgba(0,0,0,0.1)";
           context.fillText(String(level + 1), width / 2, height / 2);
+      }
+      displayScore(context) {
           // Punkzahl
           context.font = 35 * SCALE + "px Roboto Condensed";
           context.textAlign = "left";
           context.textBaseline = "top";
           context.fillStyle = "rgba(0,0,0,0.25)";
           context.fillText(String(this.score), 10 * SCALE, 10 * SCALE);
+      }
+      displayPlayground(context) {
           // Spielfeld
-          this.playground.draw(time, context);
+          this.playground.draw(context);
+      }
+      displaySnake(context) {
           // Schlange neu gezeichnet
-          this.snake.draw(time, context);
+          this.snake.draw(context);
       }
       checkCondition() {
           // Position des Kopfes der Schlange
           const cell = this.snake.getSnakeHead();
-          // lden Spielbereich verlassen oder sich selbst gefressen?
-          if (this.isOutside(cell) || this.snake.isSnake(cell)) {
-              // Tod
+          if (this.checkDead(cell)) {
               return -1;
           }
-          // eine Kiwi gegessen?
-          if (this.playground.isKiwi(cell)) {
+          if (this.ateKiwi(cell)) {
               return 1;
           }
           // nichts Besonderes
           return 0;
+      }
+      checkDead(cell) {
+          // Den Spielbereich verlassen oder sich selbst gefressen?
+          if (this.isOutside(cell) || this.snake.isSnake(cell)) {
+              // Tod
+              return true;
+          }
+      }
+      ateKiwi(cell) {
+          // eine Kiwi gegessen?
+          if (this.playground.isKiwi(cell)) {
+              return true;
+          }
       }
       // alle Kiwis der Runde sind gegessen
       levelUp() {
@@ -482,21 +503,21 @@
       // Prüfe welche Pfeiltaste gedrückt wurde
       onKeyDown(event) {
           switch (event.key) {
-              case 'ArrowUp':
+              case "ArrowUp":
                   event.preventDefault();
-                  this.snake.setDirection('Up');
+                  this.snake.setDirection(Direction.UP);
                   break;
-              case 'ArrowDown':
+              case "ArrowDown":
                   event.preventDefault();
-                  this.snake.setDirection('Down');
+                  this.snake.setDirection(Direction.DOWN);
                   break;
-              case 'ArrowLeft':
+              case "ArrowLeft":
                   event.preventDefault();
-                  this.snake.setDirection('Left');
+                  this.snake.setDirection(Direction.LEFT);
                   break;
-              case 'ArrowRight':
+              case "ArrowRight":
                   event.preventDefault();
-                  this.snake.setDirection('Right');
+                  this.snake.setDirection(Direction.RIGHT);
                   break;
           }
       }
@@ -509,42 +530,35 @@
           // ls: liefert für den specialMode in playground.ts false
           this.playground = new Playground(this, false);
       }
-      display(time) {
-          const { width, height, color, level } = this.setting;
-          const context = this.canvas.getContext("2d");
-          // Hintergrund
-          context.fillStyle = color;
-          context.fillRect(0, 0, width, height);
-          // Level
-          context.font = height + "px Roboto Condensed";
-          context.textBaseline = "middle";
-          context.textAlign = "center";
-          context.fillStyle = "rgba(0,0,0,0.1)";
-          context.fillText(String(level + 1), width / 2, height / 2);
-          // Punktzahl
-          context.font = 35 * SCALE + "px Roboto Condensed";
-          context.textAlign = "left";
-          context.textBaseline = "top";
-          context.fillStyle = "rgba(0,0,0,0.25)";
-          context.fillText(String(this.score), 10 * SCALE, 10 * SCALE);
-          // Spielfeld
-          this.playground.draw(time, context);
-          // Schlange neu gezeichnet
-          this.snake.draw(time, context);
+  }
+
+  // Das ist der Modus Klassik
+  class Interchanged extends Game {
+      constructor() {
+          super();
+          // ls: liefert für den specialMode in playground.ts false
+          this.playground = new Playground(this, false);
       }
-      checkCondition() {
-          const cell = this.snake.getSnakeHead();
-          // Das Spielfeld verlassen? Sich selbst gefressen?
-          if (this.isOutside(cell) || this.snake.isSnake(cell)) {
-              // Tod
-              return -1;
+      // Prüfe welche Pfeiltaste gedrückt wurde
+      onKeyDown(event) {
+          switch (event.key) {
+              case "ArrowUp":
+                  event.preventDefault();
+                  this.snake.setDirection(Direction.DOWN);
+                  break;
+              case "ArrowDown":
+                  event.preventDefault();
+                  this.snake.setDirection(Direction.UP);
+                  break;
+              case "ArrowLeft":
+                  event.preventDefault();
+                  this.snake.setDirection(Direction.RIGHT);
+                  break;
+              case "ArrowRight":
+                  event.preventDefault();
+                  this.snake.setDirection(Direction.LEFT);
+                  break;
           }
-          // Kiwi gefressen?
-          if (this.playground.isKiwi(cell)) {
-              return 1;
-          }
-          // nichts Besonderes
-          return 0;
       }
   }
 
@@ -555,46 +569,20 @@
           // ls: liefert für den specialMode in playground.ts true
           this.playground = new Playground(this, true);
       }
-      display(time) {
-          const { width, height, color, level } = this.setting;
-          const context = this.canvas.getContext("2d");
-          // Hintergrund
-          context.fillStyle = color;
-          context.fillRect(0, 0, width, height);
-          // Level
-          context.font = height + "px Roboto Condensed";
-          context.textBaseline = "middle";
-          context.textAlign = "center";
-          context.fillStyle = "rgba(0,0,0,0.1)";
-          context.fillText(String(level + 1), width / 2, height / 2);
-          // Punkzahl
-          context.font = 35 * SCALE + "px Roboto Condensed";
-          context.textAlign = "left";
-          context.textBaseline = "top";
-          context.fillStyle = "rgba(0,0,0,0.25)";
-          context.fillText(String(this.score), 10 * SCALE, 10 * SCALE);
+      displayPlayground(context) {
           // Spielfeld
-          this.playground.draw(time, context);
+          this.playground.draw(context);
           //ls: ON20 Special Wände werden im Spielfeld angezeigt
           const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.setting;
           context.fillStyle = "rgb(52,52,52)";
           bricksSpecial.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
-          // Schlange neu gezeichnet
-          this.snake.draw(time, context);
       }
-      checkCondition() {
-          const cell = this.snake.getSnakeHead();
-          // Das Spielfeld verlassen? Sich selbst gefressen? In die ON20 Wände gekracht?
+      checkDead(cell) {
+          // Den Spielbereich verlassen oder sich selbst gefressen?
           if (this.isOutside(cell) || this.snake.isSnake(cell) || this.crashedInBricks(cell)) {
               // Tod
-              return -1;
+              return true;
           }
-          // Kiwi gegessen?
-          if (this.playground.isKiwi(cell)) {
-              return 1;
-          }
-          // nichts Besonderes
-          return 0;
       }
       // ls: Wenn Schlange in ON20 Wände kracht liefert diese Funktion true
       crashedInBricks(pixel) {
@@ -618,9 +606,14 @@
           this.buttonSpecial = document.createElement("button");
           this.buttonSpecial.onclick = this.startSpecial;
           this.buttonSpecial.innerHTML = "ON20 Special";
+          // Button zum starten des Spielmodus Interchanged auf onclick event
+          this.buttonInterchanged = document.createElement("button");
+          this.buttonInterchanged.onclick = this.startInterchanged;
+          this.buttonInterchanged.innerHTML = "Interchanged";
           // Buttons dem Div als Kindelement hinzufügen
           this.wrapper.appendChild(this.buttonClassic);
           this.wrapper.appendChild(this.buttonSpecial);
+          this.wrapper.appendChild(this.buttonInterchanged);
           document.body.appendChild(this.wrapper);
       }
       // ls: Modus Classic erstellt, gestartet, wrapper wird ausgeblendet
@@ -640,6 +633,14 @@
               wrapper.style.display = "none";
           }
           onSpecial.start();
+      }
+      startInterchanged() {
+          const interchanged = new Interchanged();
+          const wrapper = document.getElementById("wrapper");
+          if (wrapper != null) {
+              wrapper.style.display = "none";
+          }
+          interchanged.start();
       }
   }
   // ls: Startet das Hauptmenü des Spiels

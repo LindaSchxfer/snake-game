@@ -6,7 +6,7 @@ import { Game } from "./game";
 export class Snake {
 
   readonly ORIGINAL_SIZE = 3;
-  readonly ORIGINAL_DIRECTION = "Right";
+  readonly ORIGINAL_DIRECTION = Direction.RIGHT;
   readonly ORIGINAL_POSITION = { x: 1, y: 1 };
 
   private snakeHead: Pixel;
@@ -31,16 +31,16 @@ export class Snake {
     // Welche Richtung?
     setDirection(direction:String) {
         const lastDirection = this.snakeDirection[this.snakeDirection.length-1];
-        if(lastDirection == "Up" && (direction == "Down" || direction == "Up")) {
+        if(lastDirection == Direction.UP && (direction == Direction.DOWN || direction == Direction.UP)) {
             return;
         }
-        if(lastDirection == "Down" && (direction == "Up" || direction == "Down")) {
+        if(lastDirection == Direction.DOWN && (direction == Direction.UP || direction == Direction.DOWN)) {
             return;
         }
-        if(lastDirection == "Left" && (direction == "Right" || direction == "Left")) {
+        if(lastDirection == Direction.LEFT && (direction == Direction.RIGHT || direction == Direction.LEFT)) {
             return;
         }
-        if(lastDirection == "Right" && (direction == "Left" || direction == "Right")) {
+        if(lastDirection == Direction.RIGHT && (direction == Direction.LEFT || direction == Direction.RIGHT)) {
             return;
         }
         this.snakeDirection.push(direction);
@@ -79,7 +79,7 @@ export class Snake {
     }
 
     // Schlange wird gezeichnet
-    draw(time: number, context:CanvasRenderingContext2D) {
+    draw(context:CanvasRenderingContext2D) {
         const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.game.getSettings();
 
         // Kopf
@@ -92,28 +92,28 @@ export class Snake {
 
         // Augen
         switch(this.snakeDirection[0]) {
-            case "Up":
+            case Direction.UP:
             context.beginPath();
             context.arc(x + offset, y + offset, size, 0, 2 * Math.PI, false);
             context.arc(x + 2 * offset, y + offset, size, 0, 2 * Math.PI, false);
             context.fillStyle = "white";
             context.fill();
             break;
-            case "Down":
+            case Direction.DOWN:
             context.beginPath();
             context.arc(x + offset, y + 2*offset, size, 0, 2 * Math.PI, false);
             context.arc(x + 2 * offset, y + 2*offset, size, 0, 2 * Math.PI, false);
             context.fillStyle = "white";
             context.fill();
             break;
-            case "Right":
+            case Direction.RIGHT:
             context.beginPath();
             context.arc(x + 2 * offset, y + offset, size, 0, 2 * Math.PI, false);
             context.arc(x + 2 * offset, y + 2 * offset, size, 0, 2 * Math.PI, false);
-            context.fillStyle = 'white';
+            context.fillStyle = "white";
             context.fill();
             break;
-            case "Left":
+            case Direction.LEFT:
             context.beginPath();
             context.arc(x + offset, y + offset, size, 0, 2 * Math.PI, false);
             context.arc(x + offset, y + 2 * offset, size, 0, 2 * Math.PI, false);
