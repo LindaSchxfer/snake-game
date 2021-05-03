@@ -451,29 +451,31 @@
       checkCondition() {
           // Position des Kopfes der Schlange
           const cell = this.snake.getSnakeHead();
+          // ls: ist die Schlange aus dem Spielfeld oder hat sie sich selbst gefressen?
           if (this.checkDead(cell)) {
               return -1;
           }
+          // ls: hat die Schlange eine Kiwi gegessen?
           if (this.ateKiwi(cell)) {
               return 1;
           }
           // nichts Besonderes
           return 0;
       }
+      // ls: Den Spielbereich verlassen oder sich selbst gefressen?
       checkDead(cell) {
-          // Den Spielbereich verlassen oder sich selbst gefressen?
           if (this.isOutside(cell) || this.snake.isSnake(cell)) {
               // Tod
               return true;
           }
       }
+      // ls: eine Kiwi gegessen?
       ateKiwi(cell) {
-          // eine Kiwi gegessen?
           if (this.playground.isKiwi(cell)) {
               return true;
           }
       }
-      // alle Kiwis der Runde sind gegessen
+      // alle Kiwis der Runde sind gegessen --> Level Up
       levelUp() {
           this.score += 1000;
           this.setting.level++;
@@ -494,13 +496,13 @@
           alert("You died.\r\n\r\nFinal Score: " + this.score);
           this.stop();
       }
-      // Prüfe ob Kopf der Schlange außerhalb des Canvas
+      // Prüfe ob sich der Kopf der Schlange außerhalb des Canvas befindet
       isOutside(pixel) {
           const { nbPixelX: nbCellsX, nbPixelY: nbCellsY } = this.setting;
           // links aus dem Spiel raus / rechts aus dem Spiel raus / oben aus dem Spiel Raus / unten aus dem Spiel raus
           return pixel.x < 0 || pixel.x >= nbCellsX || pixel.y < 0 || pixel.y >= nbCellsY;
       }
-      // Prüfe welche Pfeiltaste gedrückt wurde
+      // ls: Prüfe welche Pfeiltaste gedrückt wurde (enum ergänzt)
       onKeyDown(event) {
           switch (event.key) {
               case "ArrowUp":
@@ -532,31 +534,31 @@
       }
   }
 
-  // Das ist der Modus Klassik
+  // Das ist der Modus Vertauscht
   class Interchanged extends Game {
       constructor() {
           super();
           // ls: liefert für den specialMode in playground.ts false
           this.playground = new Playground(this, false);
       }
-      // Prüfe welche Pfeiltaste gedrückt wurde
+      // In diesem Modi sind die Steuertasten um 180 Grad vertauscht
       onKeyDown(event) {
           switch (event.key) {
               case "ArrowUp":
                   event.preventDefault();
-                  this.snake.setDirection(Direction.DOWN);
+                  this.snake.setDirection(Direction.DOWN); // Pfeil nach oben steuert die Schlange nach unten
                   break;
               case "ArrowDown":
                   event.preventDefault();
-                  this.snake.setDirection(Direction.UP);
+                  this.snake.setDirection(Direction.UP); // Pfeil nach unten steuert die Schlange nach oben
                   break;
               case "ArrowLeft":
                   event.preventDefault();
-                  this.snake.setDirection(Direction.RIGHT);
+                  this.snake.setDirection(Direction.RIGHT); // Pfeil nach links steuert die Schlange nach rechts
                   break;
               case "ArrowRight":
                   event.preventDefault();
-                  this.snake.setDirection(Direction.LEFT);
+                  this.snake.setDirection(Direction.LEFT); // Pfeil nach rechts steuert die Schlange nach links
                   break;
           }
       }
@@ -570,15 +572,15 @@
           this.playground = new Playground(this, true);
       }
       displayPlayground(context) {
-          // Spielfeld
+          // Spielfeld wird gezeichnet
           this.playground.draw(context);
           //ls: ON20 Special Wände werden im Spielfeld angezeigt
           const { pixelWidth: cellWidth, pixelHeight: cellHeight } = this.setting;
           context.fillStyle = "rgb(52,52,52)";
           bricksSpecial.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
       }
+      // Den Spielbereich verlassen oder sich selbst gefressen?
       checkDead(cell) {
-          // Den Spielbereich verlassen oder sich selbst gefressen?
           if (this.isOutside(cell) || this.snake.isSnake(cell) || this.crashedInBricks(cell)) {
               // Tod
               return true;
@@ -610,10 +612,15 @@
           this.buttonInterchanged = document.createElement("button");
           this.buttonInterchanged.onclick = this.startInterchanged;
           this.buttonInterchanged.innerHTML = "Interchanged";
+          // Button zum starten des Spielmodus No Walls auf onclick event
+          this.buttonNoWalls = document.createElement("button");
+          this.buttonNoWalls.onclick = this.startInterchanged;
+          this.buttonNoWalls.innerHTML = "No Walls";
           // Buttons dem Div als Kindelement hinzufügen
           this.wrapper.appendChild(this.buttonClassic);
           this.wrapper.appendChild(this.buttonSpecial);
           this.wrapper.appendChild(this.buttonInterchanged);
+          this.wrapper.appendChild(this.buttonNoWalls);
           document.body.appendChild(this.wrapper);
       }
       // ls: Modus Classic erstellt, gestartet, wrapper wird ausgeblendet

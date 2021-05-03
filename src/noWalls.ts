@@ -1,9 +1,9 @@
-// Das ist der Modus Klassik
+// Das ist der Modus Keine Wände
 
 import { Game } from "./game";
 import { Playground } from "./playground";
 
-export class Classic extends Game{
+export class NoWalls extends Game{
 
   constructor() {
     super();

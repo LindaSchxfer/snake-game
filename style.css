@@ -1,58 +1,57 @@
 body {
-    background: #C3C3C3;
-    text-align: center;
-  }
+  background: #C3C3C3;
+  text-align: center;
+}
 
-  .header{
-    background-color: #DBDBDB;
-    border-color: #707070;
-    border-style: solid;    
-    border-width: 2px;
-    width: 1200px;
-    margin: 0px auto;
-    text-align: left;
-  }
+.header{
+  background-color: #DBDBDB;
+  border-color: #707070;
+  border-style: solid;    
+  border-width: 2px;
+  width: 1200px;
+  margin: 0px auto;
+  text-align: left;
+}
 
-  h1, h2, button{
-    font-family: 'Roboto Condensed', sans-serif;
-  }
-  
-  h1{
-    font-weight: 400;
-    font-size: 40px;
-    display: inline;
-  }
+h1, h2, button{
+  font-family: 'Roboto Condensed', sans-serif;
+}
 
-  h2{
-    font-size: 30px;
-    font-weight: 400;
-    display: inline;
-  }
+h1{
+  font-weight: 400;
+  font-size: 40px;
+  display: inline;
+}
 
-  button{
-    font-weight: 400;
-    font-size: 20px;
-    width: 300px;
-    height: 60px;
-    border-radius: 10px;
-    background-color: #BB86FC;  
-  }
+h2{
+  font-size: 30px;
+  font-weight: 400;
+  display: inline;
+}
 
-  .exitdesign{
-    display: grid;
-    margin-left: 43%;
-    text-align: center;
-    padding-top: 15px;
-  }
-  
-  .modiauswahl{
-    display: grid;
-    position: relative;
-    margin: 6% 43%;   
-  }
+button{
+  font-weight: 400;
+  font-size: 20px;
+  width: 300px;
+  height: 60px;
+  border-radius: 10px;
+  background-color: #BB86FC;  
+}
 
-  .modiauswahl button{
-    margin-top: 20px;
-  }
+.exitdesign{
+  display: grid;
+  margin-left: 43%;
+  text-align: center;
+  padding-top: 15px;
+}
 
- 
+.modiauswahl{
+  display: grid;
+  position: relative;
+  margin: 6% 43%;   
+}
+
+.modiauswahl button{
+  margin-top: 20px;
+}
+

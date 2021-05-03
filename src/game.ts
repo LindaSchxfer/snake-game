@@ -174,10 +174,12 @@ export class Game {
     // Position des Kopfes der Schlange
     const cell = this.snake.getSnakeHead();
 
+    // ls: ist die Schlange aus dem Spielfeld oder hat sie sich selbst gefressen?
     if(this.checkDead(cell)) {
       return -1;
     }
     
+    // ls: hat die Schlange eine Kiwi gegessen?
     if(this.ateKiwi(cell)) {
       return 1;
     }
@@ -186,23 +188,24 @@ export class Game {
     return 0;
   }
 
+  // ls: Den Spielbereich verlassen oder sich selbst gefressen?
   checkDead(cell:Pixel) {
-    // Den Spielbereich verlassen oder sich selbst gefressen?
+
     if (this.isOutside(cell) || this.snake.isSnake(cell)) {
       // Tod
       return true;
     }
   }
 
+  // ls: eine Kiwi gegessen?
   ateKiwi(cell:Pixel) {
-    // eine Kiwi gegessen?
+
     if (this.playground.isKiwi(cell)) {
       return true;
     }
   }
 
-
-  // alle Kiwis der Runde sind gegessen
+  // alle Kiwis der Runde sind gegessen --> Level Up
   levelUp() {
     this.score += 1000;
     this.setting.level++;
@@ -225,14 +228,14 @@ export class Game {
     this.stop();
   }
 
-  // Prüfe ob Kopf der Schlange außerhalb des Canvas
+  // Prüfe ob sich der Kopf der Schlange außerhalb des Canvas befindet
   isOutside(pixel: Pixel) {
       const { nbPixelX: nbCellsX, nbPixelY: nbCellsY } = this.setting;
       // links aus dem Spiel raus / rechts aus dem Spiel raus / oben aus dem Spiel Raus / unten aus dem Spiel raus
       return pixel.x < 0 || pixel.x >= nbCellsX || pixel.y < 0 || pixel.y >= nbCellsY;
   }
 
-  // Prüfe welche Pfeiltaste gedrückt wurde
+  // ls: Prüfe welche Pfeiltaste gedrückt wurde (enum ergänzt)
   onKeyDown(event:KeyboardEvent) {
     switch(event.key) {
       case "ArrowUp":

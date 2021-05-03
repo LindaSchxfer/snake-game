@@ -12,6 +12,7 @@ class MainMenu{
   private buttonClassic: HTMLButtonElement;
   private buttonSpecial: HTMLButtonElement;
   private buttonInterchanged: HTMLButtonElement;
+  private buttonNoWalls: HTMLButtonElement;
 
   constructor(){
 
@@ -35,10 +36,16 @@ class MainMenu{
     this.buttonInterchanged.onclick = this.startInterchanged;
     this.buttonInterchanged.innerHTML = "Interchanged";
 
+    // Button zum starten des Spielmodus No Walls auf onclick event
+    this.buttonNoWalls = document.createElement("button");
+    this.buttonNoWalls.onclick = this.startInterchanged;
+    this.buttonNoWalls.innerHTML = "No Walls";
+
     // Buttons dem Div als Kindelement hinzufügen
     this.wrapper.appendChild(this.buttonClassic);
     this.wrapper.appendChild(this.buttonSpecial);
     this.wrapper.appendChild(this.buttonInterchanged);
+    this.wrapper.appendChild(this.buttonNoWalls);
     document.body.appendChild(this.wrapper);
   }
 
