@@ -21,7 +21,7 @@ export class Playground {
         const { nbPixelX: nbCellsX , nbPixelY: nbCellsY, level} = this.game.getSettings();
         const nbKiwi = KIWI * (level + 1) ;
         for (let count = 0;  count < nbKiwi; count++) {
-            // ls: so lange condition true wird die While Schleife ausgeführt 
+            // ls: so lange condition true ist wird die While Schleife ausgeführt 
             let condition = true;
 
             // ls: While Schleife für den Fall dass Kiwis unter den ON20 Wänden ausgegeben werden sollten
@@ -68,7 +68,7 @@ export class Playground {
           context.stroke();
         }
 
-        // Kiwi aussehen
+        // Aussehen der Kiwi
         context.fillStyle = "#03DAC5";
         this.kiwi.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight)); //ändere Farbe der Zelle (x und y Wert) welche eine Kiwi ist
     }

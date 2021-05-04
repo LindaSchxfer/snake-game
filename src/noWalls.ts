@@ -9,7 +9,7 @@ export class NoWalls extends Game{
     super();
   }
 
-  // ls: Spiel wird außerhalb der Wand weitergeführt
+  // ls: Spiel soll auch außerhalb der Wand weitergeführt werden, deshalb wird nur geprüft ob die Schlange sich selbst gefressen hat
   checkDead(cell:Pixel) {
 
     if (this.snake.isSnake(cell)) {

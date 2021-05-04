@@ -1,6 +1,6 @@
 // Das ist die Spiel Logik
 
-import { PIXELSIZE, COLORS, Settings as Setting, HEIGHT, MAX_LEVEL, SCALE, SPEED, WIDTH, Pixel, Direction} from "./constants";
+import { PIXELSIZE, COLORS, Settings as Setting, HEIGHT, MAX_LEVEL, SCALE, SPEED, WIDTH, Pixel, Direction } from "./constants";
 import { Playground as Playground } from "./playground";
 import { Snake } from "./snake";
 
@@ -16,7 +16,6 @@ export class Game {
   protected snake: Snake;
   protected setting: Setting;  
   private nextMove:number = 0;
-   
  
   constructor() {
 
@@ -57,9 +56,10 @@ export class Game {
     }
 
     this.snake = new Snake(this);
+    // ls: liefert für den specialMode in playground.ts false
     this.playground = new Playground(this, false);
   
-    // sobald eine Pfeiltaste gedrückt wird die onKeyDown Funktion aufgerufen
+    // sobald eine Pfeiltaste gedrückt wird, wird die onKeyDown Funktion aufgerufen
     window.addEventListener("keydown", this.onKeyDown.bind(this), false);
     document.body.appendChild(this.div);
   }
@@ -76,20 +76,20 @@ export class Game {
     this.controlFunction = false;
   }
 
-  // ls: Stoppt das Spiel mit dem Button Exit
+  // ls: Stoppt das Spiel mit dem Exit Button 
   exit(){
     this.stop();
     this.div.remove();
     const wrapper = document.getElementById("wrapper");
 
-    // ls: zuvor versteckter wrapper soll wieder erscheinen um erneut eine Auswahl zu treffen
+    // ls: zuvor versteckter wrapper soll wieder erscheinen um erneut eine Modusauswahl zu treffen
     if(wrapper != null){
     wrapper.style.display = "block";
     }    
   }
 
   getSettings() {
-    return this.setting
+    return this.setting;
   }
 
   loop(time:number) {
@@ -100,8 +100,8 @@ export class Game {
     // rekursion (Funktion ruft sich immer wieder selbst auf)
     requestAnimationFrame(this.loop.bind(this));
     
-    // prüfe ob es Zeit für den nächsten Schlangenschritt ist
-    if (time >= this.nextMove) {
+      // prüfe, ob es Zeit für den nächsten Schlangenschritt ist
+      if (time >= this.nextMove) {
       
         // Zeitpunkt für den nächsten Spielzug setzten
         this.nextMove = time + this.setting.speed;
@@ -111,38 +111,38 @@ export class Game {
                     
         // prüfe ob Spiel zu ende / level up / oder normal weiter 
         switch (this.checkCondition()) {
-            case -1:
-                this.die();
-                break;
-            case 1:
-                this.snake.lengthen();
-                this.score += 100;
-                this.playground.eatKiwi(this.snake.getSnakeHead());
-                if(this.playground.isDone()) {
-                  this.levelUp();
-                }
-            default:
-                // update display
-                const {width, height, color, level} = this.setting;
-                const context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-                this.displayBackground(context, color, width, height);
-                this.displayLevel(context, width, height, level);
-                this.displayScore(context);
-                this.displayPlayground(context);
-                this.displaySnake(context);
-         }
+          case -1:
+              this.die();
+              break;
+          case 1:
+              this.snake.lengthen();
+              this.score += 100;
+              this.playground.eatKiwi(this.snake.getSnakeHead());
+              if(this.playground.isDone()) {
+                this.levelUp();
+              }
+          default:
+              // aktualisieren
+              const {width, height, color, level} = this.setting;
+              const context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+              this.displayBackground(context, color, width, height);
+              this.displayLevel(context, width, height, level);
+              this.displayScore(context);
+              this.displayPlayground(context);
+              this.displaySnake(context);
+        }
       } 
     }
   }
 
+  // ls: Hintergrundfarbe
   displayBackground(context:CanvasRenderingContext2D, color:string, width:number, height: number) {
-    // Hintergrundfarbe
     context.fillStyle = color;
     context.fillRect(0,0,width,height);
   }
 
+  // ls: Level
   displayLevel(context:CanvasRenderingContext2D, width:number, height: number, level:number) {
-    // Level
     context.font = height+"px Roboto Condensed";
     context.textBaseline = "middle";
     context.textAlign = "center";
@@ -150,8 +150,8 @@ export class Game {
     context.fillText(String(level+1), width/2, height/1.75);
   }
 
+  // ls: Punkzahl
   displayScore(context:CanvasRenderingContext2D) {
-    // Punkzahl
     context.font = 35 * SCALE + "px Roboto Condensed";
     context.textAlign = "left";
     context.textBaseline = "top";
@@ -159,13 +159,13 @@ export class Game {
     context.fillText(String(this.score), 10*SCALE, 10*SCALE);
   }
 
+  // ls: Spielfeld
   displayPlayground(context:CanvasRenderingContext2D) {
-    // Spielfeld
     this.playground.draw(context);  
   }
 
+  // ls: Schlange neu gezeichnet
   displaySnake(context:CanvasRenderingContext2D) {
-    // Schlange neu gezeichnet
     this.snake.draw(context);
   }
 
@@ -205,7 +205,7 @@ export class Game {
     }
   }
 
-  // alle Kiwis der Runde sind gegessen --> Level Up
+  // alle Kiwis der Runde sind gegessen --> Level Up und +1000 Score
   levelUp() {
     this.score += 1000;
     this.setting.level++;

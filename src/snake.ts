@@ -5,9 +5,9 @@ import { Game } from "./game";
 
 export class Snake {
 
-  readonly ORIGINAL_SIZE = 3;
-  readonly ORIGINAL_DIRECTION = Direction.RIGHT;
-  readonly ORIGINAL_POSITION = { x: 1, y: 1 };
+  readonly ORIGINAL_SIZE = 3; // Start Länge des Schlangenkörpers
+  readonly ORIGINAL_DIRECTION = Direction.RIGHT; // Start Richtung
+  readonly ORIGINAL_POSITION = { x: 1, y: 1 }; // Start Position
 
   private snakeHead: Pixel;
   private snakeTail: Pixel[];
@@ -28,7 +28,7 @@ export class Snake {
       this.snakeTail = [];
     }
 
-    // Welche Richtung?
+    // Welche Richtung? (enum ergänzt)
     setDirection(direction:String) {
         const lastDirection = this.snakeDirection[this.snakeDirection.length-1];
         if(lastDirection == Direction.UP && (direction == Direction.DOWN || direction == Direction.UP)) {
@@ -64,28 +64,28 @@ export class Snake {
     // ermittelt abhängig von der Richtung die x und y Werte des neuen Kopfes
     getNext():Pixel {
             
-        // ls: Dies wird nur bei No Walls Mode ausgeführt, denn wenn die Schlange sonst aus dem Spielfelf fährt wird die Funktion getNext garnicht ausgeführt
-            const nbPixelX = WIDTH;
-            const nbPixelY = HEIGHT;
+        // ls: Dies wird nur bei dem No Walls Modus ausgeführt, denn wenn die Schlange in den anderen Modi aus dem Spielfeld fährt ist sie tod
+        const nbPixelX = WIDTH;
+        const nbPixelY = HEIGHT;
 
-            // Prüfe ob die Schlange links außerhalb 
-            if(this.snakeHead.x < 0) {
-                return new Pixel(this.snakeHead.x + nbPixelX, this.snakeHead.y);
+        // ls: Prüfe ob die Schlange links außerhalb des Spielfeldes
+        if(this.snakeHead.x < 0) {
+            return new Pixel(this.snakeHead.x + nbPixelX, this.snakeHead.y);
 
-            // Prüfe ob die Schlange rechts außerhalb 
-            } else if(this.snakeHead.x >= nbPixelX) {
-                return new Pixel(0, this.snakeHead.y);
+        // ls: Prüfe ob die Schlange rechts außerhalb des Spielfeldes
+        } else if(this.snakeHead.x >= nbPixelX) {
+            return new Pixel(0, this.snakeHead.y);
 
-            // Prüfe ob die Schlange oben außerhalb 
-            } else if(this.snakeHead.y < 0) {
-                return new Pixel(this.snakeHead.x, this.snakeHead.y + nbPixelY);
+        // ls: Prüfe ob die Schlange oben außerhalb des Spielfeldes
+        } else if(this.snakeHead.y < 0) {
+            return new Pixel(this.snakeHead.x, this.snakeHead.y + nbPixelY);
 
-            // Prüfe ob die Schlange unten außerhalb 
-            } else if(this.snakeHead.y >= nbPixelY) {
-                return new Pixel(this.snakeHead.x, 0);
-            }
+        // ls: Prüfe ob die Schlange unten außerhalb des Spielfeldes
+        } else if(this.snakeHead.y >= nbPixelY) {
+            return new Pixel(this.snakeHead.x, 0);
+        }
 
-        // Für alle Modi innerhalb des Playgrounds    
+        // Für alle Modi welche sich nur innerhalb des Spielfeldes abspielen   
         const direction = this.snakeDirection.length > 1 ? this.snakeDirection.splice(0,1)[0] : this.snakeDirection[0];
         switch (direction) {
                 
@@ -145,25 +145,25 @@ export class Snake {
             break;
         }
 
-    // Schwanz
-    context.fillStyle="#BB86FC";
-    this.snakeTail.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));    
-  }
+        // Schwanz
+        context.fillStyle="#BB86FC";
+        this.snakeTail.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));    
+    }
 
-    // Schlange wird verlängert
+    // Schlange wird beim fressen einer Kiwi um die Länge 3 verlängert
     lengthen(qty:number = 3) {
     this.size += qty;
-  }
+    }
   
     // gebe x und y Wert des Kopfes zurück
     getSnakeHead() {
     return this.snakeHead;
-  }
+    }
 
     // trifft der Kopf auf ein Stück vom Schwanz?
     isSnake(pixel: Pixel) {
     return this.snakeTail.find(el => pixel.x == el.x && pixel.y == el.y);
-  }
+    }
 }
 
 

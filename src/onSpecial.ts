@@ -23,7 +23,7 @@ export class OnSpecial extends Game{
     bricksSpecial.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
   }
 
-  // Den Spielbereich verlassen oder sich selbst gefressen?
+  // Den Spielbereich verlassen, sich selbst gefressen oder in die ON20 Wände gekracht?
   checkDead(cell:Pixel) {
 
     if (this.isOutside(cell) || this.snake.isSnake(cell) || this.crashedInBricks(cell)) { 

@@ -3,10 +3,9 @@
 import { Game } from "./game";
 import { Interchanged } from "./interchanged";
 import { NoWalls } from "./noWalls";
-import {OnSpecial} from "./onSpecial";
+import { OnSpecial } from "./onSpecial";
 
-
-// Anzeigen des Menüs zur Spielmodiauswahl
+// ls: Anzeigen des Menüs zur Spielmodiauswahl
 class MainMenu{
 
   private wrapper: HTMLDivElement;
@@ -17,32 +16,32 @@ class MainMenu{
 
   constructor(){
 
-    // Div erstellen um später Menü auszublenden
+    // ls: Div erstellen um später Menü auszublenden
     this.wrapper = document.createElement("div");
     this.wrapper.setAttribute("id", "wrapper");
     this.wrapper.setAttribute("class", "modiauswahl");
 
-    // Button zum starten des Spielmodus Classic auf onclick event
+    // ls: Button zum starten des Spielmodus Classic auf onclick event
     this.buttonClassic = document.createElement("button");
     this.buttonClassic.onclick = this.startClassic;
     this.buttonClassic.innerHTML = "Classic";
 
-    // Button zum starten des Spielmodus OnSpecial auf onclick event
+    // ls: Button zum starten des Spielmodus OnSpecial auf onclick event
     this.buttonSpecial = document.createElement("button");
     this.buttonSpecial.onclick = this.startSpecial;
     this.buttonSpecial.innerHTML = "ON20 Special";
 
-    // Button zum starten des Spielmodus Interchanged auf onclick event
+    // ls: Button zum starten des Spielmodus Interchanged auf onclick event
     this.buttonInterchanged = document.createElement("button");
     this.buttonInterchanged.onclick = this.startInterchanged;
     this.buttonInterchanged.innerHTML = "Interchanged";
 
-    // Button zum starten des Spielmodus No Walls auf onclick event
+    // ls: Button zum starten des Spielmodus No Walls auf onclick event
     this.buttonNoWalls = document.createElement("button");
     this.buttonNoWalls.onclick = this.startNoWalls;
     this.buttonNoWalls.innerHTML = "No Walls";
 
-    // Buttons dem Div als Kindelement hinzufügen
+    // ls: Buttons dem Div als Kindelement hinzufügen
     this.wrapper.appendChild(this.buttonClassic);
     this.wrapper.appendChild(this.buttonSpecial);
     this.wrapper.appendChild(this.buttonInterchanged);
@@ -52,7 +51,7 @@ class MainMenu{
 
   // ls: Modus Classic erstellt, gestartet, wrapper wird ausgeblendet
   startClassic(){
-    const classic = new Game();  
+    const classic = new Game(); // ls: Für den Modus Classic wird Game gestartet, da diese alles für den Classic Mode beinhaltet und keine Zusätze nötig sind  
     const wrapper = document.getElementById("wrapper");
       if(wrapper != null){
       wrapper.style.display = "none";
@@ -70,6 +69,16 @@ class MainMenu{
     onSpecial.start();
   }
 
+  // ls: Modus Interchanged erstellt, gestartet, wrapper wird ausgeblendet
+  startInterchanged() {
+    const interchanged = new Interchanged();    
+    const wrapper = document.getElementById("wrapper");
+      if(wrapper != null){
+      wrapper.style.display = "none";
+      }    
+    interchanged.start();
+  }
+
    // ls: Modus No Walls erstellt, gestartet, wrapper wird ausgeblendet
    startNoWalls(){
     const noWalls = new NoWalls();    
@@ -79,17 +88,8 @@ class MainMenu{
       }    
     noWalls.start();
   }
-
-  startInterchanged() {
-    const interchanged = new Interchanged();    
-    const wrapper = document.getElementById("wrapper");
-      if(wrapper != null){
-      wrapper.style.display = "none";
-      }    
-    interchanged.start();
-  }
 }
 
-    // ls: Startet das Hauptmenü des Spiels
-    window.focus();
-    const mainmenu = new MainMenu();
+// ls: Startet das Hauptmenü des Spiels
+window.focus();
+const mainmenu = new MainMenu();

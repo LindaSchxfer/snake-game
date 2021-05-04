@@ -145,7 +145,7 @@
           const { nbPixelX: nbCellsX, nbPixelY: nbCellsY, level } = this.game.getSettings();
           const nbKiwi = KIWI * (level + 1);
           for (let count = 0; count < nbKiwi; count++) {
-              // ls: so lange condition true wird die While Schleife ausgeführt 
+              // ls: so lange condition true ist wird die While Schleife ausgeführt 
               let condition = true;
               // ls: While Schleife für den Fall dass Kiwis unter den ON20 Wänden ausgegeben werden sollten
               while (condition) {
@@ -184,7 +184,7 @@
               context.lineTo(width, y);
               context.stroke();
           }
-          // Kiwi aussehen
+          // Aussehen der Kiwi
           context.fillStyle = "#03DAC5";
           this.kiwi.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight)); //ändere Farbe der Zelle (x und y Wert) welche eine Kiwi ist
       }
@@ -205,9 +205,9 @@
   // Das ist die Schlange
   class Snake {
       constructor(game) {
-          this.ORIGINAL_SIZE = 3;
-          this.ORIGINAL_DIRECTION = Direction.RIGHT;
-          this.ORIGINAL_POSITION = { x: 1, y: 1 };
+          this.ORIGINAL_SIZE = 3; // Start Länge des Schlangenkörpers
+          this.ORIGINAL_DIRECTION = Direction.RIGHT; // Start Richtung
+          this.ORIGINAL_POSITION = { x: 1, y: 1 }; // Start Position
           this.game = game;
           this.size = this.ORIGINAL_SIZE;
           this.snakeDirection = [this.ORIGINAL_DIRECTION];
@@ -216,7 +216,7 @@
           // Ursprünglicher Schwanz der Schlange
           this.snakeTail = [];
       }
-      // Welche Richtung?
+      // Welche Richtung? (enum ergänzt)
       setDirection(direction) {
           const lastDirection = this.snakeDirection[this.snakeDirection.length - 1];
           if (lastDirection == Direction.UP && (direction == Direction.DOWN || direction == Direction.UP)) {
@@ -246,26 +246,26 @@
       }
       // ermittelt abhängig von der Richtung die x und y Werte des neuen Kopfes
       getNext() {
-          // ls: Dies wird nur bei No Walls Mode ausgeführt, denn wenn die Schlange sonst aus dem Spielfelf fährt wird die Funktion getNext garnicht ausgeführt
+          // ls: Dies wird nur bei dem No Walls Modus ausgeführt, denn wenn die Schlange in den anderen Modi aus dem Spielfeld fährt ist sie tod
           const nbPixelX = WIDTH;
           const nbPixelY = HEIGHT;
-          // Prüfe ob die Schlange links außerhalb 
+          // ls: Prüfe ob die Schlange links außerhalb des Spielfeldes
           if (this.snakeHead.x < 0) {
               return new Pixel(this.snakeHead.x + nbPixelX, this.snakeHead.y);
-              // Prüfe ob die Schlange rechts außerhalb 
+              // ls: Prüfe ob die Schlange rechts außerhalb des Spielfeldes
           }
           else if (this.snakeHead.x >= nbPixelX) {
               return new Pixel(0, this.snakeHead.y);
-              // Prüfe ob die Schlange oben außerhalb 
+              // ls: Prüfe ob die Schlange oben außerhalb des Spielfeldes
           }
           else if (this.snakeHead.y < 0) {
               return new Pixel(this.snakeHead.x, this.snakeHead.y + nbPixelY);
-              // Prüfe ob die Schlange unten außerhalb 
+              // ls: Prüfe ob die Schlange unten außerhalb des Spielfeldes
           }
           else if (this.snakeHead.y >= nbPixelY) {
               return new Pixel(this.snakeHead.x, 0);
           }
-          // Für alle Modi innerhalb des Playgrounds    
+          // Für alle Modi welche sich nur innerhalb des Spielfeldes abspielen   
           const direction = this.snakeDirection.length > 1 ? this.snakeDirection.splice(0, 1)[0] : this.snakeDirection[0];
           switch (direction) {
               case Direction.UP:
@@ -324,7 +324,7 @@
           context.fillStyle = "#BB86FC";
           this.snakeTail.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
       }
-      // Schlange wird verlängert
+      // Schlange wird beim fressen einer Kiwi um die Länge 3 verlängert
       lengthen(qty = 3) {
           this.size += qty;
       }
@@ -375,8 +375,9 @@
               color: COLORS[0]
           };
           this.snake = new Snake(this);
+          // ls: liefert für den specialMode in playground.ts false
           this.playground = new Playground(this, false);
-          // sobald eine Pfeiltaste gedrückt wird die onKeyDown Funktion aufgerufen
+          // sobald eine Pfeiltaste gedrückt wird, wird die onKeyDown Funktion aufgerufen
           window.addEventListener("keydown", this.onKeyDown.bind(this), false);
           document.body.appendChild(this.div);
       }
@@ -390,12 +391,12 @@
       stop() {
           this.controlFunction = false;
       }
-      // ls: Stoppt das Spiel mit dem Button Exit
+      // ls: Stoppt das Spiel mit dem Exit Button 
       exit() {
           this.stop();
           this.div.remove();
           const wrapper = document.getElementById("wrapper");
-          // ls: zuvor versteckter wrapper soll wieder erscheinen um erneut eine Auswahl zu treffen
+          // ls: zuvor versteckter wrapper soll wieder erscheinen um erneut eine Modusauswahl zu treffen
           if (wrapper != null) {
               wrapper.style.display = "block";
           }
@@ -408,7 +409,7 @@
           if (this.controlFunction) {
               // rekursion (Funktion ruft sich immer wieder selbst auf)
               requestAnimationFrame(this.loop.bind(this));
-              // prüfe ob es Zeit für den nächsten Schlangenschritt ist
+              // prüfe, ob es Zeit für den nächsten Schlangenschritt ist
               if (time >= this.nextMove) {
                   // Zeitpunkt für den nächsten Spielzug setzten
                   this.nextMove = time + this.setting.speed;
@@ -427,7 +428,7 @@
                               this.levelUp();
                           }
                       default:
-                          // update display
+                          // aktualisieren
                           const { width, height, color, level } = this.setting;
                           const context = this.canvas.getContext("2d");
                           this.displayBackground(context, color, width, height);
@@ -439,33 +440,33 @@
               }
           }
       }
+      // ls: Hintergrundfarbe
       displayBackground(context, color, width, height) {
-          // Hintergrundfarbe
           context.fillStyle = color;
           context.fillRect(0, 0, width, height);
       }
+      // ls: Level
       displayLevel(context, width, height, level) {
-          // Level
           context.font = height + "px Roboto Condensed";
           context.textBaseline = "middle";
           context.textAlign = "center";
           context.fillStyle = "rgba(0,0,0,0.1)";
           context.fillText(String(level + 1), width / 2, height / 1.75);
       }
+      // ls: Punkzahl
       displayScore(context) {
-          // Punkzahl
           context.font = 35 * SCALE + "px Roboto Condensed";
           context.textAlign = "left";
           context.textBaseline = "top";
           context.fillStyle = "rgba(0,0,0,0.25)";
           context.fillText(String(this.score), 10 * SCALE, 10 * SCALE);
       }
+      // ls: Spielfeld
       displayPlayground(context) {
-          // Spielfeld
           this.playground.draw(context);
       }
+      // ls: Schlange neu gezeichnet
       displaySnake(context) {
-          // Schlange neu gezeichnet
           this.snake.draw(context);
       }
       checkCondition() {
@@ -495,7 +496,7 @@
               return true;
           }
       }
-      // alle Kiwis der Runde sind gegessen --> Level Up
+      // alle Kiwis der Runde sind gegessen --> Level Up und +1000 Score
       levelUp() {
           this.score += 1000;
           this.setting.level++;
@@ -550,7 +551,7 @@
       constructor() {
           super();
       }
-      // In diesem Modi sind die Steuertasten um 180 Grad vertauscht
+      // ls: In diesem Modi sind die Steuertasten um 180 Grad vertauscht
       onKeyDown(event) {
           switch (event.key) {
               case "ArrowUp":
@@ -578,7 +579,7 @@
       constructor() {
           super();
       }
-      // ls: Spiel wird außerhalb der Wand weitergeführt
+      // ls: Spiel soll auch außerhalb der Wand weitergeführt werden, deshalb wird nur geprüft ob die Schlange sich selbst gefressen hat
       checkDead(cell) {
           if (this.snake.isSnake(cell)) {
               // Tod
@@ -602,7 +603,7 @@
           context.fillStyle = "rgb(52,52,52)";
           bricksSpecial.forEach(cell => context.fillRect(cellWidth * cell.x, cellHeight * cell.y, cellWidth, cellHeight));
       }
-      // Den Spielbereich verlassen oder sich selbst gefressen?
+      // Den Spielbereich verlassen, sich selbst gefressen oder in die ON20 Wände gekracht?
       checkDead(cell) {
           if (this.isOutside(cell) || this.snake.isSnake(cell) || this.crashedInBricks(cell)) {
               // Tod
@@ -616,30 +617,30 @@
   }
 
   // Das ist die Haupt Logik
-  // Anzeigen des Menüs zur Spielmodiauswahl
+  // ls: Anzeigen des Menüs zur Spielmodiauswahl
   class MainMenu {
       constructor() {
-          // Div erstellen um später Menü auszublenden
+          // ls: Div erstellen um später Menü auszublenden
           this.wrapper = document.createElement("div");
           this.wrapper.setAttribute("id", "wrapper");
           this.wrapper.setAttribute("class", "modiauswahl");
-          // Button zum starten des Spielmodus Classic auf onclick event
+          // ls: Button zum starten des Spielmodus Classic auf onclick event
           this.buttonClassic = document.createElement("button");
           this.buttonClassic.onclick = this.startClassic;
           this.buttonClassic.innerHTML = "Classic";
-          // Button zum starten des Spielmodus OnSpecial auf onclick event
+          // ls: Button zum starten des Spielmodus OnSpecial auf onclick event
           this.buttonSpecial = document.createElement("button");
           this.buttonSpecial.onclick = this.startSpecial;
           this.buttonSpecial.innerHTML = "ON20 Special";
-          // Button zum starten des Spielmodus Interchanged auf onclick event
+          // ls: Button zum starten des Spielmodus Interchanged auf onclick event
           this.buttonInterchanged = document.createElement("button");
           this.buttonInterchanged.onclick = this.startInterchanged;
           this.buttonInterchanged.innerHTML = "Interchanged";
-          // Button zum starten des Spielmodus No Walls auf onclick event
+          // ls: Button zum starten des Spielmodus No Walls auf onclick event
           this.buttonNoWalls = document.createElement("button");
           this.buttonNoWalls.onclick = this.startNoWalls;
           this.buttonNoWalls.innerHTML = "No Walls";
-          // Buttons dem Div als Kindelement hinzufügen
+          // ls: Buttons dem Div als Kindelement hinzufügen
           this.wrapper.appendChild(this.buttonClassic);
           this.wrapper.appendChild(this.buttonSpecial);
           this.wrapper.appendChild(this.buttonInterchanged);
@@ -648,7 +649,7 @@
       }
       // ls: Modus Classic erstellt, gestartet, wrapper wird ausgeblendet
       startClassic() {
-          const classic = new Game();
+          const classic = new Game(); // ls: Für den Modus Classic wird Game gestartet, da diese alles für den Classic Mode beinhaltet und keine Zusätze nötig sind  
           const wrapper = document.getElementById("wrapper");
           if (wrapper != null) {
               wrapper.style.display = "none";
@@ -664,6 +665,15 @@
           }
           onSpecial.start();
       }
+      // ls: Modus Interchanged erstellt, gestartet, wrapper wird ausgeblendet
+      startInterchanged() {
+          const interchanged = new Interchanged();
+          const wrapper = document.getElementById("wrapper");
+          if (wrapper != null) {
+              wrapper.style.display = "none";
+          }
+          interchanged.start();
+      }
       // ls: Modus No Walls erstellt, gestartet, wrapper wird ausgeblendet
       startNoWalls() {
           const noWalls = new NoWalls();
@@ -672,14 +682,6 @@
               wrapper.style.display = "none";
           }
           noWalls.start();
-      }
-      startInterchanged() {
-          const interchanged = new Interchanged();
-          const wrapper = document.getElementById("wrapper");
-          if (wrapper != null) {
-              wrapper.style.display = "none";
-          }
-          interchanged.start();
       }
   }
   // ls: Startet das Hauptmenü des Spiels
