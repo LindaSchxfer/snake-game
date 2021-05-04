@@ -2,14 +2,11 @@
 
 import { Direction } from "./constants";
 import { Game } from "./game";
-import { Playground } from "./playground";
 
 export class Interchanged extends Game{
 
     constructor() {
       super();
-      // ls: liefert für den specialMode in playground.ts false
-      this.playground = new Playground(this, false);
     }
 
     // In diesem Modi sind die Steuertasten um 180 Grad vertauscht

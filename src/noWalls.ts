@@ -1,14 +1,21 @@
 // Das ist der Modus Keine Wände
 
+import { Pixel } from "./constants";
 import { Game } from "./game";
-import { Playground } from "./playground";
 
 export class NoWalls extends Game{
 
   constructor() {
     super();
-    // ls: liefert für den specialMode in playground.ts false
-    this.playground = new Playground(this, false);
+  }
+
+  // ls: Spiel wird außerhalb der Wand weitergeführt
+  checkDead(cell:Pixel) {
+
+    if (this.snake.isSnake(cell)) {
+      // Tod
+      return true;
+    }
   }
 }
 

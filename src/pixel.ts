@@ -1,4 +1,4 @@
-//this is the grid
+// Das sind die Pixel des Spielfeldes
 
 export class Pixel {
 

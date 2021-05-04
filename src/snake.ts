@@ -1,6 +1,6 @@
 // Das ist die Schlange
 
-import { PIXELSIZE, Direction, SCALE, Pixel } from "./constants";
+import { PIXELSIZE, Direction, SCALE, Pixel, WIDTH, HEIGHT } from "./constants";
 import { Game } from "./game";
 
 export class Snake {
@@ -63,6 +63,29 @@ export class Snake {
 
     // ermittelt abhängig von der Richtung die x und y Werte des neuen Kopfes
     getNext():Pixel {
+            
+        // ls: Dies wird nur bei No Walls Mode ausgeführt, denn wenn die Schlange sonst aus dem Spielfelf fährt wird die Funktion getNext garnicht ausgeführt
+            const nbPixelX = WIDTH;
+            const nbPixelY = HEIGHT;
+
+            // Prüfe ob die Schlange links außerhalb 
+            if(this.snakeHead.x < 0) {
+                return new Pixel(this.snakeHead.x + nbPixelX, this.snakeHead.y);
+
+            // Prüfe ob die Schlange rechts außerhalb 
+            } else if(this.snakeHead.x >= nbPixelX) {
+                return new Pixel(0, this.snakeHead.y);
+
+            // Prüfe ob die Schlange oben außerhalb 
+            } else if(this.snakeHead.y < 0) {
+                return new Pixel(this.snakeHead.x, this.snakeHead.y + nbPixelY);
+
+            // Prüfe ob die Schlange unten außerhalb 
+            } else if(this.snakeHead.y >= nbPixelY) {
+                return new Pixel(this.snakeHead.x, 0);
+            }
+
+        // Für alle Modi innerhalb des Playgrounds    
         const direction = this.snakeDirection.length > 1 ? this.snakeDirection.splice(0,1)[0] : this.snakeDirection[0];
         switch (direction) {
                 

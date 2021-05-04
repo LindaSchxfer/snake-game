@@ -152,7 +152,7 @@
                   let x = Math.floor(Math.random() * nbCellsX);
                   let y = Math.floor(Math.random() * nbCellsY);
                   // ls: Prüfe falls specialMode aktiv ist, wenn ja dürfen keine Kiwis unter den Wänden liegen
-                  if (this.specialMode === true) {
+                  if (this.specialMode) {
                       //Prüfe ob die zufällig verstreuten Kiwis unter einer Wand liegen
                       if (bricksSpecial.find(el => x == el.x && y == el.y) == undefined) {
                           this.kiwi.push(new Pixel(x, y));
@@ -246,6 +246,26 @@
       }
       // ermittelt abhängig von der Richtung die x und y Werte des neuen Kopfes
       getNext() {
+          // ls: Dies wird nur bei No Walls Mode ausgeführt, denn wenn die Schlange sonst aus dem Spielfelf fährt wird die Funktion getNext garnicht ausgeführt
+          const nbPixelX = WIDTH;
+          const nbPixelY = HEIGHT;
+          // Prüfe ob die Schlange links außerhalb 
+          if (this.snakeHead.x < 0) {
+              return new Pixel(this.snakeHead.x + nbPixelX, this.snakeHead.y);
+              // Prüfe ob die Schlange rechts außerhalb 
+          }
+          else if (this.snakeHead.x >= nbPixelX) {
+              return new Pixel(0, this.snakeHead.y);
+              // Prüfe ob die Schlange oben außerhalb 
+          }
+          else if (this.snakeHead.y < 0) {
+              return new Pixel(this.snakeHead.x, this.snakeHead.y + nbPixelY);
+              // Prüfe ob die Schlange unten außerhalb 
+          }
+          else if (this.snakeHead.y >= nbPixelY) {
+              return new Pixel(this.snakeHead.x, 0);
+          }
+          // Für alle Modi innerhalb des Playgrounds    
           const direction = this.snakeDirection.length > 1 ? this.snakeDirection.splice(0, 1)[0] : this.snakeDirection[0];
           switch (direction) {
               case Direction.UP:
@@ -430,7 +450,7 @@
           context.textBaseline = "middle";
           context.textAlign = "center";
           context.fillStyle = "rgba(0,0,0,0.1)";
-          context.fillText(String(level + 1), width / 2, height / 2);
+          context.fillText(String(level + 1), width / 2, height / 1.75);
       }
       displayScore(context) {
           // Punkzahl
@@ -525,21 +545,10 @@
       }
   }
 
-  // Das ist der Modus Klassik
-  class Classic extends Game {
-      constructor() {
-          super();
-          // ls: liefert für den specialMode in playground.ts false
-          this.playground = new Playground(this, false);
-      }
-  }
-
   // Das ist der Modus Vertauscht
   class Interchanged extends Game {
       constructor() {
           super();
-          // ls: liefert für den specialMode in playground.ts false
-          this.playground = new Playground(this, false);
       }
       // In diesem Modi sind die Steuertasten um 180 Grad vertauscht
       onKeyDown(event) {
@@ -560,6 +569,20 @@
                   event.preventDefault();
                   this.snake.setDirection(Direction.LEFT); // Pfeil nach rechts steuert die Schlange nach links
                   break;
+          }
+      }
+  }
+
+  // Das ist der Modus Keine Wände
+  class NoWalls extends Game {
+      constructor() {
+          super();
+      }
+      // ls: Spiel wird außerhalb der Wand weitergeführt
+      checkDead(cell) {
+          if (this.snake.isSnake(cell)) {
+              // Tod
+              return true;
           }
       }
   }
@@ -614,7 +637,7 @@
           this.buttonInterchanged.innerHTML = "Interchanged";
           // Button zum starten des Spielmodus No Walls auf onclick event
           this.buttonNoWalls = document.createElement("button");
-          this.buttonNoWalls.onclick = this.startInterchanged;
+          this.buttonNoWalls.onclick = this.startNoWalls;
           this.buttonNoWalls.innerHTML = "No Walls";
           // Buttons dem Div als Kindelement hinzufügen
           this.wrapper.appendChild(this.buttonClassic);
@@ -625,7 +648,7 @@
       }
       // ls: Modus Classic erstellt, gestartet, wrapper wird ausgeblendet
       startClassic() {
-          const classic = new Classic();
+          const classic = new Game();
           const wrapper = document.getElementById("wrapper");
           if (wrapper != null) {
               wrapper.style.display = "none";
@@ -640,6 +663,15 @@
               wrapper.style.display = "none";
           }
           onSpecial.start();
+      }
+      // ls: Modus No Walls erstellt, gestartet, wrapper wird ausgeblendet
+      startNoWalls() {
+          const noWalls = new NoWalls();
+          const wrapper = document.getElementById("wrapper");
+          if (wrapper != null) {
+              wrapper.style.display = "none";
+          }
+          noWalls.start();
       }
       startInterchanged() {
           const interchanged = new Interchanged();

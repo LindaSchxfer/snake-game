@@ -6,15 +6,15 @@ import { Snake } from "./snake";
 
 export class Game {
 
-  public canvas: HTMLCanvasElement;
+  protected canvas: HTMLCanvasElement;
   private div: HTMLDivElement;
   private buttonExit: HTMLButtonElement;
 
-  public score:number = 0;
+  protected score:number = 0;
   private controlFunction: boolean = false;
   protected playground: Playground;
-  public snake: Snake;
-  public setting: Setting;  
+  protected snake: Snake;
+  protected setting: Setting;  
   private nextMove:number = 0;
    
  
@@ -147,7 +147,7 @@ export class Game {
     context.textBaseline = "middle";
     context.textAlign = "center";
     context.fillStyle = "rgba(0,0,0,0.1)";
-    context.fillText(String(level+1), width/2, height/2);
+    context.fillText(String(level+1), width/2, height/1.75);
   }
 
   displayScore(context:CanvasRenderingContext2D) {

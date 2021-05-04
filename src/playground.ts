@@ -30,7 +30,7 @@ export class Playground {
                 let y = Math.floor(Math.random() * nbCellsY); 
 
                 // ls: Prüfe falls specialMode aktiv ist, wenn ja dürfen keine Kiwis unter den Wänden liegen
-                if(this.specialMode === true){
+                if(this.specialMode){
 
                     //Prüfe ob die zufällig verstreuten Kiwis unter einer Wand liegen
                     if(bricksSpecial.find(el => x == el.x && y == el.y) == undefined) {

@@ -1,7 +1,8 @@
 // Das ist die Haupt Logik
 
-import {Classic} from "./classic";
+import { Game } from "./game";
 import { Interchanged } from "./interchanged";
+import { NoWalls } from "./noWalls";
 import {OnSpecial} from "./onSpecial";
 
 
@@ -38,7 +39,7 @@ class MainMenu{
 
     // Button zum starten des Spielmodus No Walls auf onclick event
     this.buttonNoWalls = document.createElement("button");
-    this.buttonNoWalls.onclick = this.startInterchanged;
+    this.buttonNoWalls.onclick = this.startNoWalls;
     this.buttonNoWalls.innerHTML = "No Walls";
 
     // Buttons dem Div als Kindelement hinzufügen
@@ -51,7 +52,7 @@ class MainMenu{
 
   // ls: Modus Classic erstellt, gestartet, wrapper wird ausgeblendet
   startClassic(){
-    const classic = new Classic();  
+    const classic = new Game();  
     const wrapper = document.getElementById("wrapper");
       if(wrapper != null){
       wrapper.style.display = "none";
@@ -67,6 +68,16 @@ class MainMenu{
       wrapper.style.display = "none";
       }    
     onSpecial.start();
+  }
+
+   // ls: Modus No Walls erstellt, gestartet, wrapper wird ausgeblendet
+   startNoWalls(){
+    const noWalls = new NoWalls();    
+    const wrapper = document.getElementById("wrapper");
+      if(wrapper != null){
+      wrapper.style.display = "none";
+      }    
+    noWalls.start();
   }
 
   startInterchanged() {
