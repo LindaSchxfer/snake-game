@@ -34,7 +34,7 @@ export class OnSpecial extends Game{
 
   // ls: Wenn Schlange in ON20 Wände kracht liefert diese Funktion true
   crashedInBricks(pixel: Pixel){
-  return bricksSpecial.find(el => pixel.x == el.x && pixel.y == el.y);
+    return bricksSpecial.find(el => pixel.x == el.x && pixel.y == el.y);
   }
 }
 

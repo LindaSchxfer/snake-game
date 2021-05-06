@@ -112,24 +112,24 @@ export class Game {
         // prüfe ob Spiel zu ende / level up / oder normal weiter 
         switch (this.checkCondition()) {
           case -1:
-              this.die();
-              break;
+            this.die();
+            break;
           case 1:
-              this.snake.lengthen();
-              this.score += 100;
-              this.playground.eatKiwi(this.snake.getSnakeHead());
-              if(this.playground.isDone()) {
-                this.levelUp();
-              }
+            this.snake.lengthen();
+            this.score += 100;
+            this.playground.eatKiwi(this.snake.getSnakeHead());
+            if(this.playground.isDone()) {
+              this.levelUp();
+            }
           default:
-              // aktualisieren
-              const {width, height, color, level} = this.setting;
-              const context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-              this.displayBackground(context, color, width, height);
-              this.displayLevel(context, width, height, level);
-              this.displayScore(context);
-              this.displayPlayground(context);
-              this.displaySnake(context);
+            // aktualisieren
+            const {width, height, color, level} = this.setting;
+            const context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+            this.displayBackground(context, color, width, height);
+            this.displayLevel(context, width, height, level);
+            this.displayScore(context);
+            this.displayPlayground(context);
+            this.displaySnake(context);
         }
       } 
     }

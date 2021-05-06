@@ -92,4 +92,4 @@ class MainMenu{
 
 // ls: Startet das Hauptmenü des Spiels
 window.focus();
-const mainmenu = new MainMenu();
+new MainMenu();
